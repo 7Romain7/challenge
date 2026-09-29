@@ -203,8 +203,7 @@ importance:
 **Scientific approach (the bulk of the grade)**
 - **Justify your choices** — *why* this detector architecture, *why* this
   optimization strategy. Motivated decisions matter more than the final score.
-- **Metrics** — define how you measure success for both detection (e.g. IoU/Dice
-  on the mask) and optimization (contrast reached vs. budget spent), and use them
+- **Metrics** — define how you measure success for both detection and optimization, and use them
   to validate your results.
 - **Data management & reproducibility** — clean train/validation/test split,
   fixed seeds, results anyone can re-run.
@@ -214,8 +213,7 @@ importance:
 
 **Solution quality**
 - A **robust interdot detector**, assessed on the metrics *you* present.
-- A **contrast-optimization algorithm** that finds the maximum in a **small number
-  of measurements / pixels**.
+- A **contrast-optimization algorithm** that finds the maximum with efficiency.
 
 **Communication**
 - Clear, pedagogical delivery: good intro, well-explained concepts.
