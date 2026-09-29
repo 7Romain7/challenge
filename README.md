@@ -142,7 +142,7 @@ a detector trained here transfers to stage 2.
 
 **Definition:** We call "contrast" of an interdot the absolute value of the difference between the intensity on the stick and the background.
 
-**Goal:** Implement an algorithm that, for any fresh device, finds the gate configuration (g1, g2, g3, g4, g5) corresponding to the highest possible interdot contrast.
+**Goal:** Implement an algorithm that, for any fresh device, finds the gate configuration (g1, g2, g3, g4, g5) corresponding to the inderdot with highest possible contrast.
 
 **How?** Each `new_experiment()` is a **fresh device** with a **hidden, randomised**
 contrast sweet-spot. You propose gate voltages, measure images, and keep what
