@@ -24,7 +24,7 @@ best contrast.
 
 1. **Detection** — implement an algorithm that takes a CSD image and outputs the **interdot pixels** (a binary
    mask).
-2. **Optimization** — implement an algorithm that finds the gate voltages that **maximise interdot contrast** for any fresh device simulated by the simulator. You may (and probably
+2. **Optimization** — implement an algorithm that finds the gate voltages that **maximize interdot contrast** for any fresh device simulated by the simulator. You may (and probably
    should) reuse your stage-1 detector to build a better objective.
 
 These two challenges are the **mandatory baseline**, and doing them well is
@@ -57,7 +57,7 @@ source .venv/bin/activate          # macOS / Linux
 .venv\Scripts\activate             # Windows (PowerShell / cmd)
 ```
 
-The detector stack (challenge 1) is left to you — pick any framework (PyTorch,
+The stack is left to you — pick any framework (PyTorch,
 JAX, scikit-learn, ...) and add it with `uv add <package>`.
 
 ---
@@ -137,14 +137,14 @@ print(exp.reveal())   # hidden optimum + budget — for SELF-CHECK only, not for
 ```
 
 - `g2, g4` **pan** the measurement window; `g1, g3, g5` are the **barriers** that
-  set contrast (and drift the sticks, so you may need to re-centre `g2, g4`).
+  set contrast (and drift the sticks, so you may need to re-center `g2, g4`).
 - `measure(...)` accepts `span_h, span_v, step_h, step_v` — measure the same
   device through a **wide low-res overview** or a **zoomed fine-step scan**.
 - `img.std()` is only a starting objective; a contrast-to-noise ratio computed on
   your **detected** interdot pixels is far less noisy. This is where stage 1 pays
   off.
 
-A baseline coordinate-ascent optimiser (designed to stall in a local optimum — a
+A baseline coordinate-ascent optimizer (designed to stall in a local optimum — a
 starting point to beat) is provided:
 
 ```bash
@@ -152,15 +152,24 @@ python starter/stage2_optimization/optimize.py
 ```
 
 > `reveal()` exists so you can **check your own results**. Using it *inside* your
-> optimiser defeats the point and is exactly the kind of simulator-exploitation
+> optimizer defeats the point and is exactly the kind of simulator-exploitation
 > we're not looking for.
 
 ---
+## What you have to submit before the end of the event
 
+A documented repository with:
+- your solution to challenges 1 and 2;
+- a README.md so that we understand how your code is structured and how to run it;
+- the slides you'll be using to present your work to us on Friday.
+
+Thank you very much for your participation and effort!
+
+---
 ## What we're evaluating
 
 You'll give a **10-minute presentation in English** followed by a **5-minute
-Q&A**. It is very likely you won't cover everything in 10 minutes — the Q&A is
+Q&A**. You likely won't cover everything in 10 minutes — the Q&A is
 where the jury fills the gaps, so be ready to defend your choices.
 
 Marks weigh the **scientific approach** far above raw performance. In order of
