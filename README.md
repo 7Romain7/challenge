@@ -10,13 +10,18 @@ Your job is to build tools a real experimentalist would actually use: first to
 best contrast.
 
 > **Read this first — the spirit of the challenge.**
-> The simulator is a *stand-in* for a real machine, not the target. We are **not**
-> looking for solutions that overfit or exploit quirks of this particular
-> simulator (peeking at hidden state, reverse-engineering the noise model, brute-
-> forcing every pixel, etc.). In a real lab you don't get `reveal()` and every
-> measurement costs time and money. Build methods that would **transfer to real
-> data** and justify them on that basis. This is graded much more on **scientific
-> approach** than on a leaderboard number.
+> Approach this like a researcher: the simulator is a *stand-in* for a real machine,
+> so the real prize is methods that would **transfer to an actual lab**. There, you
+> don't get `reveal()` and every measurement costs time and money — so the
+> interesting question is what you'd do with only what a real experimentalist can
+> see. Solutions that lean on hidden state, reverse-engineer the noise model, or
+> brute-force every pixel win here but teach you nothing about a real device.
+> Build something you could defend to a physicist, and justify *why* it works: this
+> is graded much more on **scientific approach** than on a leaderboard number.
+>
+> Treat the repo as a **sandbox**: solve the two challenges on the defaults first,
+> then change whatever you can scientifically justify. See
+> [How far can I go?](#how-far-can-i-go) for exactly what that means.
 
 ---
 
@@ -32,6 +37,26 @@ entirely enough. They can also simply be a starting point, though: if you want t
 and as long as it is motivated by a sound **scientific approach**, you are free to
 use the backend as a sandbox — explore it, extend the problems, and push things
 further in whatever direction you find interesting.
+
+---
+
+## How far can I go?
+
+Think of the repo as a **sandbox with one common baseline**. There are three tiers,
+and they are about *reproducibility*, not permission:
+
+1. **Baseline (required).** Solve Challenge 1 & 2 against the **default**
+   `csd/config.py`. This is the common ground everyone is measured on, so leave the
+   defaults in place for these results and keep your seeds fixed.
+2. **Sandbox (encouraged).** Beyond the baseline, change *anything* if you can
+   justify it scientifically — generator parameters, the simulator physics, the
+   contrast model, the problem itself. Just **keep the default baseline run too**,
+   and **document what you changed and why**. A well-motivated experiment that
+   "fails" is worth more than an unexplained tweak that helps.
+3. **One thing to avoid.** Please don't lean on the simulator's hidden state to
+   boost your score — e.g. `reveal()` inside your optimizer, reverse-engineering the
+   noise model, or brute-forcing every pixel. Reshaping the sandbox for good science
+   is very different from gaming the number, and only the latter misses the point.
 
 ---
 

@@ -10,8 +10,11 @@ to the participant-facing API. Two independent bundles:
   drift, contrast). It *composes* a :class:`GeneratorConfig` (``.generator``) so a
   single object fully describes a challenge-2 run.
 
-To retune, edit the defaults below in this one place. This is an engine file —
-participants do not edit it.
+To retune, edit the defaults in this one place. Keep these at the defaults for
+your **baseline** Challenge 1 & 2 results, so they stay reproducible and
+comparable across participants. Changing them as a deliberate, documented
+experiment is welcome — just keep the default run alongside it. See the
+"How far can I go?" section of the README for the full sandbox contract.
 """
 
 from __future__ import annotations
