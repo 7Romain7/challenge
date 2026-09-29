@@ -1,14 +1,13 @@
-# CSD Hackathon
+# C12-hackathon
 
-A simulation of a **5-gate double-quantum-dot (DQD)** device and a two-part
-challenge built on top of it. The device is imaged through its **charge-stability
-diagram (CSD)** — a 2D map in the **(g2, g4)** plunger plane. The three barriers
-**g1, g3, g5** drift the interdots ("sticks") across that plane *and* set their
+Welcome to C12's hackathon! The goal for you is to learn some aspects of qubit calibration and, as scientists, propose solutions to automate it.
+
+In this repository you will find a simulation of a **5-gate double-quantum-dot (DQD)** device and a two-part challenge built on top of it. The device is imaged through its **charge-stability diagram (CSD)** — a 2D map in the **(g2, g4)** plunger plane. The three barriers **g1, g3, g5** drift the interdots ("sticks") across that plane *and* set their
 **contrast**.
 
 Your job is to build tools a real experimentalist would actually use: first to
-**see** the interdots automatically, then to **tune the device** to the point of
-best contrast — cheaply.
+**detect** the interdots automatically, then to **tune the device** to the point of
+best contrast.
 
 > **Read this first — the spirit of the challenge.**
 > The simulator is a *stand-in* for a real machine, not the target. We are **not**
@@ -23,16 +22,10 @@ best contrast — cheaply.
 
 ## The two challenges
 
-1. **Detection** — from a raw CSD image, output the **interdot pixels** (a binary
-   mask). How you do it (classical CV, a CNN, …) is entirely up to you.
-2. **Optimization** — find the gate voltages that **maximise interdot contrast**,
-   using **as few measurements / pixels as possible**. You may (and probably
+1. **Detection** — implement an algorithm that takes a CSD image and outputs the **interdot pixels** (a binary
+   mask).
+2. **Optimization** — implement an algorithm that finds the gate voltages that **maximise interdot contrast** for any fresh device simulated by the simulator. You may (and probably
    should) reuse your stage-1 detector to build a better objective.
-
-The contrast landscape is **multi-region**: different patches of the diagram light
-up at different barrier settings and only **one** region is the true global
-optimum. Expect **local optima** — a single hill-climb on full-frame statistics
-will stall. Finding the best region takes a real search (scan → pan → zoom).
 
 These two challenges are the **mandatory baseline**, and doing them well is
 entirely enough. They can also simply be a starting point, though: if you want to,
@@ -80,7 +73,9 @@ it, or throw it away.
 
 ## Challenge 1 — detection
 
-Generate a dataset locally, then train whatever you like to map `images → masks`.
+**Goal:** Implement an algorithm that takes a CSD (Charge Stability Diagram) measurement as input and outputs the pixels corresponding to sticks.
+
+**How?** Generate a dataset locally using the generator, then train whatever you like to map `images → masks`.
 The data is a plain folder (`images.npy`, `masks.npy`, `sticks.jsonl`,
 `meta.json`) — memory-mapped, no exotic dependencies.
 
@@ -104,9 +99,13 @@ a detector trained here transfers directly to stage 2.
 
 ## Challenge 2 — optimization
 
-Each `new_experiment()` is a **fresh device** with a **hidden, randomised**
+**Definition:** We call "contrast" of an interdot the absolute value of the difference between the intensity on the stick and the background.
+
+**Goal:** Implement an algorithm that, for any fresh device, finds the gate configuration (g1, g2, g3, g4, g5) corresponding to the highest possible interdot contrast.
+
+**How?** Each `new_experiment()` is a **fresh device** with a **hidden, randomised**
 contrast sweet-spot. You propose gate voltages, measure images, and keep what
-improves — while tracking your **budget** (measurements and pixels integrated;
+improves — you can track your **budget** (measurements and pixels integrated;
 pixels are the proxy for acquisition time).
 
 ```python

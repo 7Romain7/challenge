@@ -12,10 +12,6 @@ numpy and the standard library:
 ``images.npy`` / ``masks.npy`` are written incrementally with ``open_memmap`` so
 generating tens of thousands of samples never holds them all in RAM, and they
 can be loaded lazily with ``np.load(..., mmap_mode="r")``.
-
-The images are **raw** (same distribution as :class:`csd.simulator.CSDSimulator`)
-so a detector trained here transfers to the optimization challenge. Any
-normalization is left entirely to the consumer.
 """
 
 from __future__ import annotations
