@@ -47,7 +47,7 @@ and they are about *reproducibility*, not permission:
 
 1. **Baseline (required).** Solve Challenge 1 & 2 against the **default**
    `csd/config.py`. This is the common ground everyone is measured on, so leave the
-   defaults in place for these results and keep your seeds fixed.
+   defaults in place for these results.
 2. **Sandbox (encouraged).** Beyond the baseline, change *anything* if you can
    justify it scientifically — generator parameters, the simulator physics, the
    contrast model, the problem itself. Just **keep the default baseline run too**,
