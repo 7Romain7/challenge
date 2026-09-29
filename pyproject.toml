@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "csd-hackathon"
+name = "c12-hackathon"
 version = "0.1.0"
 description = "Charge Stability Diagram generator, simulator, and hackathon challenges for a 5-gate DQD platform."
 readme = "README.md"
@@ -15,11 +15,9 @@ dependencies = [
     "matplotlib>=3.7",
 ]
 
-[project.optional-dependencies]
-# The detector stack (challenge 1) is left to participants — install whatever you
-# like. This extra is a convenience for those who want PyTorch:
-torch = ["torch"]
-# Tooling for contributors to this repo:
+[dependency-groups]
+# Tooling for contributors to this repo. `uv sync` installs this automatically;
+# skip it with `uv sync --no-dev`.
 dev = ["pytest", "ruff"]
 
 [tool.hatch.build.targets.wheel]

@@ -2,6 +2,9 @@ __pycache__/
 *.pyc
 .DS_Store
 
+# uv virtual environment 
+.venv/
+
 # generated datasets 
 data/
 *.npy

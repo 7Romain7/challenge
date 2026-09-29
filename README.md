@@ -37,14 +37,28 @@ further in whatever direction you find interesting.
 
 ## Installation
 
-Requires Python ≥ 3.10.
+Requires Python ≥ 3.10. We use [uv](https://docs.astral.sh/uv/) for environments
+and dependencies:
 
 ```bash
-conda create -n c12-hackathon python=3.11 && conda activate c12-hackathon
-pip install -e .         
+# install uv once (see the uv docs for other platforms)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# create the venv and install the project (uv fetches a compatible Python if needed)
+uv sync
 ```
 
-Extra stack is left to you. 
+`uv sync` creates `.venv/` and installs the project plus its dev tooling. Either
+prefix commands with `uv run` (e.g. `uv run python starter/...`), or activate the
+environment in your terminal:
+
+```bash
+source .venv/bin/activate          # macOS / Linux
+.venv\Scripts\activate             # Windows (PowerShell / cmd)
+```
+
+The detector stack (challenge 1) is left to you — pick any framework (PyTorch,
+JAX, scikit-learn, ...) and add it with `uv add <package>`.
 
 ---
 
