@@ -13,7 +13,7 @@ so a general optimiser wins — not a memorised answer.
 
 Quick start
 -----------
-    from csd_challenge import new_experiment
+    from csd import new_experiment
 
     exp = new_experiment()                      # fresh run, hidden optimum
     img = exp.measure(g1=0.0, g3=0.0, g5=0.0)   # a measurement -> 2D image
@@ -39,7 +39,6 @@ import numpy.typing as npt
 from .config import CHALLENGE, ChallengeConfig
 from .simulator import (
     BARRIERS,
-    GATES,
     CSDSimulator,
     DriftMatrix,
     Region,
@@ -256,39 +255,3 @@ def new_experiment(
     )
 
     return Experiment(_sim=sim, _optimum=sim.optimum())
-
-
-def _demo() -> None:
-    """Tiny reference optimiser: coordinate ascent over all five gates."""
-    exp = new_experiment(seed=0)
-
-    wp = exp.start
-
-    def score(point: dict[str, float]) -> float:
-        # Objective = image std (rises as interdots deepen). Average a few frames
-        # to smooth out the fresh per-frame noise.
-        imgs = [exp.measure(**point) for _ in range(5)]
-        return float(np.mean([im.std() for im in imgs]))
-
-    best = score(wp)
-    print(f"start contrast metric = {best:.3f}")
-
-    step = 0.04
-    for _ in range(6):  # a few passes
-        for gate in GATES:
-            for direction in (+1, -1):
-                trial = dict(wp)
-                trial[gate] += direction * step
-                s = score(trial)
-                if s > best:
-                    best, wp = s, trial
-        step *= 0.6  # shrink the step as we home in
-
-    print(f"final contrast metric = {best:.3f}")
-    print("found barriers  :", {g: round(wp[g], 3) for g in BARRIERS})
-    print("hidden optimum  :", {g: round(v, 3) for g, v in exp.reveal()["optimum_barriers"].items()})
-    print("measurements    :", exp.reveal()["n_measurements"])
-
-
-if __name__ == "__main__":
-    _demo()

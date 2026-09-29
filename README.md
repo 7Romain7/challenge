@@ -84,6 +84,8 @@ python starter/stage1_detection/generate_data.py --n 2000 --out data/train
 python starter/stage1_detection/generate_data.py --n 400  --out data/val --seed 999
 ```
 
+Generation runs at roughly **1000 samples/minute** (so the 2000+400 above take ~2–3 min).
+
 ```python
 from csd import load_dataset
 
@@ -93,7 +95,7 @@ sticks = ds["sticks"]                        # per-image metadata: positions, wi
 ```
 
 Images are **raw**, exactly as the stage-2 simulator emits them, so
-a detector trained here transfers directly to stage 2.
+a detector trained here transfers to stage 2.
 
 ---
 
@@ -195,4 +197,4 @@ pyproject.toml
 ```
 
 The public API is what `import csd` exposes (`new_experiment`, `load_dataset`,
-`generate_dataset`, …). See `DESIGN.md` for the reasoning behind the engine.
+`generate_dataset`, …). 

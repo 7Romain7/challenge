@@ -52,12 +52,17 @@ Pedagogical points to try
 
 from __future__ import annotations
 
+import pathlib
+import sys
 from dataclasses import replace
 
 import numpy as np
 
-from csd.challenge import new_experiment
-from csd.config import CHALLENGE
+# Make the top-level ``csd`` package importable when running this file directly.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2]))
+
+from csd.challenge import new_experiment  # noqa: E402
+from csd.config import CHALLENGE  # noqa: E402
 
 BARRIERS = ("g1", "g3", "g5")
 GATE_LABELS = {

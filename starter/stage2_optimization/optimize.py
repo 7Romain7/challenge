@@ -30,9 +30,15 @@ This baseline is a plain coordinate ascent on full-frame std — it will typical
 
 from __future__ import annotations
 
+import pathlib
+import sys
+
 import numpy as np
 
-from csd import BARRIERS, GATES, new_experiment
+# Make the top-level ``csd`` package importable when running this file directly.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2]))
+
+from csd import BARRIERS, GATES, new_experiment  # noqa: E402
 
 
 def score(exp, point: dict[str, float], n_frames: int = 5) -> float:

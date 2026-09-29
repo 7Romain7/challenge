@@ -25,7 +25,7 @@ class GeneratorConfig:
     """CSD appearance/physics — how a charge-stability diagram looks.
 
     Frozen and shared: :mod:`csd.dataset` (challenge 1) and the challenge-2 scene
-    both build from a ``GeneratorConfig`` so their images are identically
+    both build from a ``GeneratorConfig`` so their images are similarly
     distributed (a stage-1 detector transfers to stage-2).
     """
 
@@ -52,7 +52,7 @@ class GeneratorConfig:
     width_frac: tuple[float, float] = (0.1, 0.2)  # stick width as fraction of stick length
 
     # Interdot intensity (a scene-wide mean is drawn per scene, then per-stick jitter).
-    intensity_range: tuple[float, float] = (-10.0, -1.0)  # i_mean ~ U(range)
+    intensity_range: tuple[float, float] = (-35.0, -1.0)  # i_mean ~ U(range)
     intensity_jitter: float = 0.1  # per-stick i ~ i_mean * [1-j, 1+j]
     line_intensity_frac: float = 0.5  # connecting-line intensity = i_mean * frac
 
