@@ -78,8 +78,6 @@ class ChallengeConfig:
 
     Frozen so every run shares one consistent configuration. ``generator`` is the
     shared CSD physics; the remaining fields define the hidden contrast landscape.
-    Every randomised landscape quantity is a ``<x>`` default with a ``<x>_jitter``
-    fractional spread, drawn as ``x * uniform(1 - jitter, 1 + jitter)`` per run.
     """
 
     # Shared CSD physics. Defaults to the same GENERATOR the dataset uses, but with
@@ -96,8 +94,8 @@ class ChallengeConfig:
     optimum_range: float = 0.5  # each region's barrier centre drawn in [-r, +r]
     base: float = 5.0  # floor contrast on every stick (never fully blank)
 
-    amplitude: float = 10.0  # central per-region peak contrast boost
-    amplitude_jitter: float = 2  # per-region A ~ [1-j, 1+j] x amplitude
+    amplitude: float = 25.0  # central per-region peak contrast boost
+    amplitude_jitter: float = .2  # per-region A ~ [1-j, 1+j] x amplitude
 
     gamma: float = 0.10  # central Lorentzian half-width per barrier
     gamma_jitter: float = 0.5  # per-(region,barrier) width ~ [1-j, 1+j] x gamma
@@ -110,7 +108,7 @@ class ChallengeConfig:
         (-0.20, -0.35, -0.80),  # dg4 per volt on (g1, g3, g5)
     )
     drift_jitter: float = 0.15  # per-arm ~ [1-j, 1+j] x default lever arm
-    drift_curvature: float = 1.0  # magnitude of the order-2 drift terms
+    drift_curvature: float = .5  # magnitude of the order-2 drift terms
 
 
 # The single, shared configuration every participant runs against.
