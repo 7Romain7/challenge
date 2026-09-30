@@ -97,12 +97,12 @@ diagram, how noise and window size affect what you measure.
 ```bash
 # Stage 1: generate a dataset first (see Challenge 1 below), then browse it
 # with its ground-truth masks overlaid
-python starter/stage1_detection/generate_data.py --n 2000 --out data/train
-python starter/stage1_detection/explore_data.py --out data/train
+uv run python starter/stage1_detection/generate_data.py --n 2000 --out data/train
+uv run python starter/stage1_detection/explore_data.py --out data/train
 
 # Stage 2: live sliders over the five gates (g1..g5) + scan settings
 # (no data needed — the simulator builds a fresh device on the fly)
-python starter/stage2_optimization/explore_simulator.py
+uv run python starter/stage2_optimization/explore_simulator.py
 ```
 
 Everything under `starter/` is **illustrative, not prescriptive** — copy it, edit
@@ -119,8 +119,8 @@ The data is a plain folder (`images.npy`, `masks.npy`, `sticks.jsonl`,
 `meta.json`) — memory-mapped, no exotic dependencies.
 
 ```bash
-python starter/stage1_detection/generate_data.py --n 2000 --out data/train
-python starter/stage1_detection/generate_data.py --n 400  --out data/val --seed 999
+uv run python starter/stage1_detection/generate_data.py --n 2000 --out data/train
+uv run python starter/stage1_detection/generate_data.py --n 400  --out data/val --seed 999
 ```
 
 Generation runs at roughly **1000 samples/minute** (so the 2000+400 above take ~2–3 min).
@@ -173,7 +173,7 @@ A baseline coordinate-ascent optimizer (designed to stall in a local optimum —
 starting point to beat) is provided:
 
 ```bash
-python starter/stage2_optimization/optimize.py
+uv run python starter/stage2_optimization/optimize.py
 ```
 
 > `reveal()` exists so you can **check your own results**. Using it *inside* your
