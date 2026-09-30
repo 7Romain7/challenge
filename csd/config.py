@@ -55,7 +55,7 @@ class GeneratorConfig:
     width_frac: tuple[float, float] = (0.1, 0.2)  # stick width as fraction of stick length
 
     # Interdot intensity (a scene-wide mean is drawn per scene, then per-stick jitter).
-    intensity_range: tuple[float, float] = (-35.0, -1.0)  # i_mean ~ U(range)
+    intensity_range: tuple[float, float] = (-33.0, -1.0)  # i_mean ~ U(range)
     intensity_jitter: float = 0.1  # per-stick i ~ i_mean * [1-j, 1+j]
     line_intensity_frac: float = 0.5  # connecting-line intensity = i_mean * frac
 
@@ -92,7 +92,7 @@ class ChallengeConfig:
     # light up at different barriers and finding the optimum takes a real search.
     n_regions: int = 4  # number of spatial regions, each with its own peak
     optimum_range: float = 0.5  # each region's barrier centre drawn in [-r, +r]
-    base: float = 5.0  # floor contrast on every stick (never fully blank)
+    base: float = 3.0  # floor contrast on every stick (never fully blank)
 
     amplitude: float = 25.0  # central per-region peak contrast boost
     amplitude_jitter: float = .2  # per-region A ~ [1-j, 1+j] x amplitude
