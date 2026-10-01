@@ -8,3 +8,5 @@ __pycache__/
 # generated datasets 
 data/
 *.npy
+# detection training runs (checkpoints, logs)
+runs/

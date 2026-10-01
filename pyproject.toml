@@ -15,6 +15,10 @@ dependencies = [
     "matplotlib>=3.7",
 ]
 
+[project.optional-dependencies]
+# Stage-1 transformer detectors (detection/). Install with `uv sync --extra train`.
+train = ["torch>=2.2"]
+
 [dependency-groups]
 # Tooling for contributors to this repo. `uv sync` installs this automatically;
 # skip it with `uv sync --no-dev`.
@@ -22,6 +26,10 @@ dev = ["pytest", "ruff"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["csd"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
