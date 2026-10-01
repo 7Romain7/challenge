@@ -24,6 +24,8 @@ REGISTRY = {"random": RandomSearch, "bo": BayesOpt,
             # reference architecture with the final challenge-1 network ($C12_DL_CKPT / $C12_DL_THR)
             "bo_dlf": partial(BayesOpt, session_cfg=SessionConfig(**_DL)),
             "bo_roi_dlf": partial(ROIBayesOpt, session_cfg=SessionConfig(**_DL)),
+            # switch to ROI patches only once a point is lit (threshold fixed a priori)
+            "bo_roi_lit_dlf": partial(ROIBayesOpt, lit_thr=1.0, session_cfg=SessionConfig(**_DL)),
             "bo_pfn": PFNBayesOpt,
             # classical model-free baselines (optimization/methods/classic.py)
             "coord_official": OfficialCoordAscent,

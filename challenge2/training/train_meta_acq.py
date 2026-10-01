@@ -32,7 +32,10 @@ TRAIN = range(100, 1000)
 
 def episode(task) -> float:
     w, seed = task
-    exp = new_experiment(seed=seed)
+    try:
+        exp = new_experiment(seed=seed)
+    except ValueError:  # the simulator cannot build stick-free devices; same score for all
+        return 0.0
     bx = BlindExperiment(exp, pixel_cap=1_000_000)
     meth = MetaAcqROI(run_seed=0, weights=w, stop_after_phase1=True)
     try:

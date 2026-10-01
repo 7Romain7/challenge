@@ -27,8 +27,12 @@ class ROIBayesOpt(MultiFidelityBO):
     name = "bo_roi"
 
     def __init__(self, *a, switch: float = 0.4, patch: float = 0.05, disk_px: int = 5,
-                 local_sd: float = 0.08, **kw) -> None:
+                 local_sd: float = 0.08, lit_thr: float | None = None, max_switch: float = 0.8,
+                 **kw) -> None:
         super().__init__(*a, switch=switch, **kw)
+        # adaptive switch: stay on full frames past `switch` until some point is lit
+        # (lower bound y - se > lit_thr, in floor units), at most until `max_switch`
+        self.lit_thr, self.max_switch = lit_thr, max_switch
         self.patch, self.disk_px, self.local_sd = patch, disk_px, local_sd
         self.X2: list = []
         self.Y2: list = []
@@ -67,9 +71,18 @@ class ROIBayesOpt(MultiFidelityBO):
         self.Y2.append(float(np.mean(amps)))
         self.S2.append(float(np.median(sig) / np.sqrt(len(amps))))
 
+    def _lit(self, s: Session) -> bool:
+        _, y, se = s.points()
+        return bool(len(y) and np.max(y - se) > self.lit_thr)
+
+    def _phase1(self, s: Session) -> bool:
+        cap, px = s.bx.pixel_cap, s.bx.n_pixels
+        if px < self.switch * cap:
+            return True
+        return self.lit_thr is not None and px < self.max_switch * cap and not self._lit(s)
+
     def search(self, s: Session) -> None:
-        cap = s.bx.pixel_cap
-        while self.can_afford(s) and s.bx.n_pixels < self.switch * cap:
+        while self.can_afford(s) and self._phase1(s):
             self._step_full(s)
         chosen = self._choose_focus(s)
         if chosen is None:
