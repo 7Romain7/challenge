@@ -1,0 +1,6 @@
+400 runs ok, 0 errors
+bo       n=100 | R@100k med 0.978 (succ<=.05: 0.00) | R@250k med 0.892 (succ<=.05: 0.00) | R@500k med 0.504 (succ<=.05: 0.05) | R@1000k med 0.194 (succ<=.05: 0.18) | Rvis 0.194 | fail 1.6
+bo_m5    n=100 | R@100k med 0.978 (succ<=.05: 0.00) | R@250k med 0.952 (succ<=.05: 0.00) | R@500k med 0.788 (succ<=.05: 0.07) | R@1000k med 0.283 (succ<=.05: 0.15) | Rvis 0.283 | fail 8.3
+random   n=100 | R@100k med 0.978 (succ<=.05: 0.00) | R@250k med 0.941 (succ<=.05: 0.00) | R@500k med 0.817 (succ<=.05: 0.00) | R@1000k med 0.739 (succ<=.05: 0.01) | Rvis 0.739 | fail 1.3
+random_m5 n=100 | R@100k med 0.978 (succ<=.05: 0.00) | R@250k med 0.953 (succ<=.05: 0.00) | R@500k med 0.881 (succ<=.05: 0.00) | R@1000k med 0.759 (succ<=.05: 0.01) | Rvis 0.759 | fail 9.5
+start R median: 0.9775520065281305

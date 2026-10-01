@@ -1,0 +1,33 @@
+val        background logit: median -5.29  MAD-sigma 1.01  p99.9 +5.36
+test       background logit: median -5.29  MAD-sigma 1.01  p99.9 +5.28
+ood_stage2 background logit: median -5.33  MAD-sigma 0.98  p99.9 -2.17
+null       background logit: median -5.33  MAD-sigma 0.98  p99.9 -2.28
+thr -5.00 | null FA/img  18.15 | val P 0.35 R 1.00 F1 0.517 | test P 0.35 R 1.00 F1 0.515 | ood_stage2 P 0.09 R 1.00 F1 0.173
+thr -4.75 | null FA/img  56.75 | val P 0.18 R 1.00 F1 0.306 | test P 0.18 R 1.00 F1 0.302 | ood_stage2 P 0.07 R 1.00 F1 0.125
+thr -4.50 | null FA/img 121.73 | val P 0.10 R 1.00 F1 0.178 | test P 0.10 R 1.00 F1 0.174 | ood_stage2 P 0.05 R 0.99 F1 0.098
+thr -4.25 | null FA/img 176.64 | val P 0.07 R 0.99 F1 0.133 | test P 0.07 R 0.99 F1 0.130 | ood_stage2 P 0.05 R 0.98 F1 0.091
+thr -4.00 | null FA/img 193.88 | val P 0.07 R 0.99 F1 0.127 | test P 0.07 R 0.99 F1 0.123 | ood_stage2 P 0.05 R 0.97 F1 0.094
+thr -3.75 | null FA/img 173.28 | val P 0.08 R 0.98 F1 0.143 | test P 0.07 R 0.98 F1 0.138 | ood_stage2 P 0.06 R 0.94 F1 0.107
+thr -3.50 | null FA/img 134.31 | val P 0.10 R 0.98 F1 0.182 | test P 0.10 R 0.97 F1 0.177 | ood_stage2 P 0.07 R 0.92 F1 0.132
+thr -3.25 | null FA/img  92.74 | val P 0.14 R 0.96 F1 0.251 | test P 0.14 R 0.96 F1 0.246 | ood_stage2 P 0.10 R 0.88 F1 0.174
+thr -3.00 | null FA/img  59.04 | val P 0.22 R 0.95 F1 0.361 | test P 0.22 R 0.95 F1 0.353 | ood_stage2 P 0.14 R 0.83 F1 0.239
+thr -2.75 | null FA/img  35.34 | val P 0.35 R 0.94 F1 0.508 | test P 0.34 R 0.94 F1 0.496 | ood_stage2 P 0.21 R 0.78 F1 0.329
+thr -2.50 | null FA/img  19.20 | val P 0.51 R 0.93 F1 0.660 | test P 0.50 R 0.94 F1 0.652 | ood_stage2 P 0.32 R 0.73 F1 0.441
+thr -2.25 | null FA/img   9.32 | val P 0.68 R 0.92 F1 0.785 | test P 0.67 R 0.93 F1 0.778 | ood_stage2 P 0.48 R 0.68 F1 0.559
+thr -2.00 | null FA/img   4.49 | val P 0.81 R 0.91 F1 0.859 | test P 0.80 R 0.92 F1 0.858 | ood_stage2 P 0.64 R 0.62 F1 0.630
+thr -1.75 | null FA/img   1.72 | val P 0.90 R 0.90 F1 0.901 | test P 0.89 R 0.91 F1 0.900 | ood_stage2 P 0.80 R 0.55 F1 0.655
+thr -1.50 | null FA/img   0.57 | val P 0.94 R 0.89 F1 0.916 | test P 0.93 R 0.91 F1 0.918 | ood_stage2 P 0.91 R 0.50 F1 0.642
+thr -1.25 | null FA/img   0.20 | val P 0.96 R 0.88 F1 0.922 | test P 0.95 R 0.90 F1 0.926 | ood_stage2 P 0.96 R 0.43 F1 0.595
+thr -1.00 | null FA/img   0.12 | val P 0.97 R 0.87 F1 0.920 | test P 0.96 R 0.90 F1 0.928 | ood_stage2 P 0.99 R 0.38 F1 0.553
+thr -0.75 | null FA/img   0.05 | val P 0.98 R 0.86 F1 0.918 | test P 0.97 R 0.89 F1 0.926 | ood_stage2 P 1.00 R 0.33 F1 0.500
+thr -0.50 | null FA/img   0.01 | val P 0.98 R 0.85 F1 0.913 | test P 0.97 R 0.88 F1 0.924 | ood_stage2 P 1.00 R 0.27 F1 0.430
+thr -0.25 | null FA/img   0.00 | val P 0.99 R 0.84 F1 0.908 | test P 0.98 R 0.87 F1 0.923 | ood_stage2 P 1.00 R 0.23 F1 0.375
+thr +0.00 | null FA/img   0.00 | val P 0.99 R 0.83 F1 0.904 | test P 0.98 R 0.86 F1 0.920 | ood_stage2 P 1.00 R 0.18 F1 0.310
+thr +0.25 | null FA/img   0.00 | val P 0.99 R 0.82 F1 0.900 | test P 0.99 R 0.86 F1 0.918 | ood_stage2 P 1.00 R 0.15 F1 0.258
+thr +0.50 | null FA/img   0.00 | val P 1.00 R 0.81 F1 0.895 | test P 0.99 R 0.85 F1 0.915 | ood_stage2 P 1.00 R 0.12 F1 0.208
+thr +0.75 | null FA/img   0.00 | val P 1.00 R 0.80 F1 0.890 | test P 1.00 R 0.84 F1 0.913 | ood_stage2 P 1.00 R 0.09 F1 0.173
+thr +1.00 | null FA/img   0.00 | val P 1.00 R 0.79 F1 0.885 | test P 1.00 R 0.83 F1 0.908 | ood_stage2 P 1.00 R 0.08 F1 0.140
+thr +1.25 | null FA/img   0.00 | val P 1.00 R 0.79 F1 0.880 | test P 1.00 R 0.82 F1 0.903 | ood_stage2 P 1.00 R 0.06 F1 0.122
+thr +1.50 | null FA/img   0.00 | val P 1.00 R 0.78 F1 0.874 | test P 1.00 R 0.82 F1 0.898 | ood_stage2 P 1.00 R 0.06 F1 0.106
+thr +1.75 | null FA/img   0.00 | val P 1.00 R 0.77 F1 0.867 | test P 1.00 R 0.81 F1 0.893 | ood_stage2 P 1.00 R 0.05 F1 0.087
+thr +2.00 | null FA/img   0.00 | val P 1.00 R 0.76 F1 0.863 | test P 1.00 R 0.80 F1 0.888 | ood_stage2 P 1.00 R 0.04 F1 0.082

@@ -2,6 +2,9 @@ __pycache__/
 *.pyc
 .DS_Store
 
+# permissions SSH locales (Claude Code)
+.claude/settings.local.json
+
 # uv virtual environment 
 .venv/
 
@@ -10,3 +13,9 @@ data/
 *.npy
 # detection training runs (checkpoints, logs)
 runs/
+
+# PDF de cours / contexte (local)
+docs/
+
+# sorties du smoke test (detection.baselines --quick)
+challenge1/results/quick/
