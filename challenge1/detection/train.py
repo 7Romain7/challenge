@@ -206,7 +206,7 @@ def main(argv=None) -> None:
                     c = pc if c is None else {k: c[k] + pc[k] for k in pc}
             train_geom = pixel_scores(c, [v["thr"]])[0]["tol_f1"]
             rec = {
-                "step": step + 1, "eval": True, "val_tol_f1": v["tol_f1"], "val_f1": v["f1"],
+                "step": step + 1, "eval": True, "val_sel": v["sel"], "val_tol_f1": v["tol_f1"], "val_f1": v["f1"],
                 "val_iou": v["iou"], "val_obj_f1": v["obj_f1"], "val_thr": v["thr"],
                 "train_geom_tol_f1": train_geom, "geom_gap": train_geom - v["tol_f1"],
                 "elapsed_min": (time.time() - t0) / 60,
@@ -214,8 +214,8 @@ def main(argv=None) -> None:
             log.write(json.dumps(rec) + "\n")
             log.flush()
             print("EVAL", json.dumps(rec))
-            if v["tol_f1"] > best:
-                best = v["tol_f1"]
+            if v["sel"] > best:  # (obj_f1 + tol_f1) / 2, not tol_f1 alone (dilation loophole)
+                best = v["sel"]
                 torch.save({"model": ema.state_dict(), "arch": args.arch, "step": step + 1,
                             "val": {k: v[k] for k in v if k != "pr_curve"}}, out / "best.pt")
             torch.save(

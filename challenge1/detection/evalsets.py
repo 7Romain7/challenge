@@ -11,7 +11,7 @@ import torch
 from detection.metrics import object_scores, pixel_counts, pixel_scores
 from detection.synth import robust_normalize
 
-THRESHOLDS = tuple(np.round(np.arange(0.1, 0.91, 0.05), 2))
+THRESHOLDS = (0.02, 0.05) + tuple(np.round(np.arange(0.1, 0.91, 0.05), 2))
 
 
 class EvalSet:
@@ -55,10 +55,15 @@ def score(probs: np.ndarray, es: EvalSet, thr: float | None = None, device="cpu"
         c = pixel_counts(p, g, THRESHOLDS)
         counts = c if counts is None else {k: counts[k] + c[k] for k in c}
     rows = pixel_scores(counts, THRESHOLDS)
+    h, w = probs.shape[1:]
     if thr is None:
-        best = max(rows, key=lambda r: r["tol_f1"])
+        # Select on sel = (obj_f1 + tol_f1) / 2, as the classical baselines do: tol_f1 alone
+        # is maximised by a mask dilated by 1 px (tol_f1 = 1 while strict F1 = 0.5).
+        objs = [object_scores(probs > r["thr"], es.sticks, h, w) for r in rows]
+        k = max(range(len(rows)), key=lambda i: (objs[i]["obj_f1"] + rows[i]["tol_f1"]) / 2)
+        best, obj = rows[k], objs[k]
     else:
         best = min(rows, key=lambda r: abs(r["thr"] - thr))
-    h, w = probs.shape[1:]
-    obj = object_scores(probs > best["thr"], es.sticks, h, w)
-    return {"set": es.name, "n": len(es), **best, **obj, "pr_curve": rows}
+        obj = object_scores(probs > best["thr"], es.sticks, h, w)
+    sel = (obj["obj_f1"] + best["tol_f1"]) / 2
+    return {"set": es.name, "n": len(es), **best, **obj, "sel": sel, "pr_curve": rows}
