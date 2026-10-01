@@ -1,0 +1,4 @@
+60 runs ok, 0 errors
+bo       n= 30 | R@100k med 0.974 (succ<=.05: 0.00) | R@250k med 0.856 (succ<=.05: 0.00) | R@500k med 0.531 (succ<=.05: 0.07) | R@1000k med 0.204 (succ<=.05: 0.13) | Rvis 0.204 | fail 2.0
+random   n= 30 | R@100k med 0.974 (succ<=.05: 0.00) | R@250k med 0.910 (succ<=.05: 0.00) | R@500k med 0.688 (succ<=.05: 0.00) | R@1000k med 0.593 (succ<=.05: 0.03) | Rvis 0.593 | fail 1.0
+start R median: 0.9740565895471169
