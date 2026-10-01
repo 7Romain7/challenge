@@ -69,6 +69,7 @@ def run_one(task: tuple) -> dict:
     pts = [(e.gates["g1"], e.gates["g3"], e.gates["g5"]) for e in bx.events
            if e.kind == "measure" and e.gates.get("g1") is not None]
     out["path_len"] = float(np.sum(np.linalg.norm(np.diff(np.array(pts), axis=0), axis=1))) if len(pts) > 1 else 0.0
+    out.update(truth.region_diagnosis(exp, final["wp"], pts))
     out["secs"] = time.time() - t0
     return out
 
@@ -109,6 +110,10 @@ def summarize(path: str) -> None:
             v = [r["R_curve"][str(ck)] for r in rr if str(ck) in r["R_curve"]]
             if v:
                 line += f" | R@{ck // 1000}k med {np.median(v):.3f} (succ<=.05: {np.mean(np.array(v) <= .05):.2f})"
+        if "region_ok" in rr[0]:
+            line += (f" | region ok {np.mean([r['region_ok'] for r in rr]):.2f}"
+                     f" best seen {np.mean([r['best_visited'] for r in rr]):.2f}"
+                     f" R_region med {np.median([r['R_region'] for r in rr]):.3f}")
         line += f" | Rvis {np.median([r['R_vis_final'] for r in rr]):.3f} | fail {np.mean([r['n_track_fail'] for r in rr]):.1f}"
         print(line)
     print("start R median:", np.median([r["R_start"] for r in ok]))

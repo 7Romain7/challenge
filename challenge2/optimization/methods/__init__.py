@@ -12,6 +12,8 @@ _DL = dict(detector="dl", dl_ckpt=os.environ.get("C12_DL_CKPT", ""),
            dl_thr=float(os.environ.get("C12_DL_THR", "0.1")))  # threshold from the run's val
 from .pfn import PFNBayesOpt
 from .random_search import RandomSearch
+from .meta_acq import MetaAcqROI
+from .classic import CMAESSearch, OfficialCoordAscent, ROICMAES, SPSAAdam
 
 _M5 = SessionConfig(detector="m5_min")  # front-end with the frozen challenge-1 detector
 
@@ -22,7 +24,14 @@ REGISTRY = {"random": RandomSearch, "bo": BayesOpt,
             # reference architecture with the final challenge-1 network ($C12_DL_CKPT / $C12_DL_THR)
             "bo_dlf": partial(BayesOpt, session_cfg=SessionConfig(**_DL)),
             "bo_roi_dlf": partial(ROIBayesOpt, session_cfg=SessionConfig(**_DL)),
-            "bo_pfn": PFNBayesOpt,  # GP swapped for the synthetic-only PFN ($C12_PFN_CKPT)
+            "bo_pfn": PFNBayesOpt,
+            # classical model-free baselines (optimization/methods/classic.py)
+            "coord_official": OfficialCoordAscent,
+            "cma_dlf": partial(CMAESSearch, session_cfg=SessionConfig(**_DL)),
+            "spsa_dlf": partial(SPSAAdam, session_cfg=SessionConfig(**_DL)),
+            "roi_cma_dlf": partial(ROICMAES, session_cfg=SessionConfig(**_DL)),
+            # meta-learned acquisition in phase 1 of bo_roi ($C12_META_W; EI if unset)
+            "bo_roi_meta_dlf": partial(MetaAcqROI, session_cfg=SessionConfig(**_DL)),  # GP swapped for the synthetic-only PFN ($C12_PFN_CKPT)
             "bo_mf_s40": partial(MultiFidelityBO, switch=0.4),
             "bo_mf_s80": partial(MultiFidelityBO, switch=0.8),
             "random_m5": partial(RandomSearch, session_cfg=_M5),

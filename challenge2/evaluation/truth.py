@@ -40,3 +40,27 @@ def device_descriptors(exp) -> dict:
     return {"n_sticks": int(len(sim.base_interdots)),
             "sticks_in_best_region": int(cnt[best]),
             "gap_top2": float((A[0] - A[1]) / A[0]) if len(A) > 1 else 1.0}
+
+
+def region_diagnosis(exp, wp: dict, visited: list) -> dict:
+    """Split the regret of ``wp`` into a region-choice part and a refinement part.
+
+    ``R_region`` = regret of the *peak* of the populated region that dominates at ``wp``
+    (0 if it is the best region): what is lost by the choice of region alone. The rest of
+    the regret is lost by refinement inside that region. ``best_visited``: some measured
+    barrier point lit the best region to at least half its amplitude (exploration found it).
+    """
+    sim = exp._sim
+    m = sim.contrast_model
+    live = sorted(set(int(k) for k in sim._region_of))
+    if not live:
+        return {}
+    best = max(live, key=lambda k: m.regions[k].amplitude)
+    f_star = m.base + m.regions[best].amplitude
+    b = (wp["g1"], wp["g3"], wp["g5"])
+    k_hat = max(live, key=lambda k: m.region_factor(m.regions[k], b))
+    r_region = (f_star - (m.base + m.regions[k_hat].amplitude)) / max(f_star - m.base, 1e-9)
+    half = m.base + 0.5 * m.regions[best].amplitude
+    seen = any(m.region_factor(m.regions[best], v) >= half for v in visited)
+    return {"region_ok": bool(k_hat == best), "R_region": float(r_region),
+            "best_visited": bool(seen)}
