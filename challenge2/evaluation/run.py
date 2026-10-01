@@ -28,17 +28,49 @@ from .seeds import SPLITS
 CHECKPOINTS = (100_000, 250_000, 500_000, 1_000_000, 2_000_000)
 
 
+def shifted_config(name: str):
+    """Shifted simulator configurations of PROTOCOL section 6 (robustness, report only)."""
+    from dataclasses import replace
+
+    from csd.config import CHALLENGE
+    g = CHALLENGE.generator
+    if name == "S1":  # pixel noise and stripes x2
+        return replace(CHALLENGE, generator=replace(g, noise_sigma_pixel=2 * g.noise_sigma_pixel,
+                                                    noise_sigma_h=2 * g.noise_sigma_h))
+    if name == "S2":  # stripes x3
+        return replace(CHALLENGE, generator=replace(g, noise_sigma_h=3 * g.noise_sigma_h))
+    if name == "S3":
+        return replace(CHALLENGE, optimum_range=0.8)
+    if name == "S4a":
+        return replace(CHALLENGE, n_regions=2)
+    if name == "S4b":
+        return replace(CHALLENGE, n_regions=8)
+    if name == "S5a":  # narrow peaks
+        return replace(CHALLENGE, gamma=0.5 * CHALLENGE.gamma)
+    if name == "S5b":
+        return replace(CHALLENGE, gamma=2 * CHALLENGE.gamma)
+    if name == "S6":
+        return replace(CHALLENGE, drift_jitter=0.3, drift_curvature=1.5)
+    if name == "S7":  # weak contrast
+        return replace(CHALLENGE, amplitude=10.0)
+    raise ValueError(name)
+
+
 def regret(f_star: float, base: float, f: float) -> float:
     return float((f_star - f) / max(f_star - base, 1e-9))
 
 
 def run_one(task: tuple) -> dict:
-    method, seed, budget, run_seed = task
+    method, seed, budget, run_seed, shift = (task + (None,))[:5]
     t0 = time.time()
-    exp = new_experiment(seed=seed)
+    try:
+        exp = (new_experiment(seed=seed) if not shift
+               else new_experiment(seed=seed, config=shifted_config(shift)))
+    except ValueError as e:  # devices the simulator cannot build (no interdot)
+        return {"method": method, "seed": seed, "run_seed": run_seed, "error": repr(e)}
     base, f_star = truth.base_and_best(exp)
     desc = truth.device_descriptors(exp)
-    out = {"method": method, "seed": seed, "run_seed": run_seed, "budget": budget,
+    out = {"method": method, "seed": seed, "run_seed": run_seed, "budget": budget, "shift": shift,
            "base": base, "f_star": f_star, **desc}
     start_wp = dict(exp.start)
     out["R_start"] = regret(f_star, base, truth.true_factor(exp, start_wp))
@@ -84,9 +116,10 @@ def main() -> None:
     ap.add_argument("--run-seeds", type=int, default=1)
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--out", default="challenge2/results/run.jsonl")
+    ap.add_argument("--shift", default=None, help="shifted configuration S1..S7 (PROTOCOL 6)")
     a = ap.parse_args()
     seeds = list(SPLITS[a.split])[a.start : a.start + a.n]
-    tasks = [(m, s, a.budget, rs) for m in a.methods for s in seeds for rs in range(a.run_seeds)]
+    tasks = [(m, s, a.budget, rs, a.shift) for m in a.methods for s in seeds for rs in range(a.run_seeds)]
     pathlib.Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     ctx = mp.get_context("spawn")
     with ctx.Pool(a.workers, maxtasksperchild=1) as pool, open(a.out, "w") as f:

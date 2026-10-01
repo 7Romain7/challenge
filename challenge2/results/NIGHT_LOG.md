@@ -20,3 +20,14 @@ Test 10000–10199 intact.
 | 10 | 9 + **UCB** (√β = 2, fixé a priori) en phase 1 | **0,094** | **37 %** | **−0,022 [−0,038 ; −0,007], p = 0,002 (Holm 0,005)** | **à confirmer sur dev 900–999** |
 | 11 | 9 + moitié de la phase 1 en remplissage d'espace (maximin) | 0,091 | 32 % | −0,009 [−0,037 ; 0,007], p = 0,11 | non significatif |
 | — | diagnostic : sur 47 appareils perdant > 5 % par le choix de région, 26 n'ont jamais allumé la meilleure région à 10 % (couverture), 11 l'ont allumée à ≥ 20 % sans la suivre (information perdue par le max) | | | | → pistes 12 (modèle par région) et 13 (exploration grossière ×2) |
+| 12 | modèle par région (GP par groupe k-means k = 6, max d'EI) + partage calculé | en cours | | | |
+| 13 | exploration grossière ×2 (≈ 80 frames grossières + 20 fines) + partage calculé | en cours | | | |
+
+## Files autonomes lancées à 23 h 40 (scripts `evaluation/q_<machine>.sh`, sorties dans `~/c12_bench2/results/`)
+- dindon : `bo_region_ucb_dlf` dev 0–99 puis dev 900–999 · jabiru : `bo_coarse_ucb_dlf` dev 0–99 et 900–999, `bo_coarse_dlf` dev 900–999
+- kamiche : confirmation `bo_roi_auto_ucb_dlf` + `bo_roi_dlf` dev 900–999, puis val × 3 graines de `bo_roi_auto_ucb_dlf`
+- perdrix / ombrette : val × 3 de `bo_region_ucb_dlf` / `bo_coarse_ucb_dlf` · gelinotte : méta final dev 0–99 + val × 3 `bo_roi_meta_dlf` et **`bo_roi_dlf` (référence val)**
+- linotte / nandou : robustesse S1–S7 (dev 0–49) de `bo_roi_dlf` vs `bo_roi_auto_ucb_dlf` ; nandou : `bo_region_dlf` dev 900–999
+
+**Règle de décision fixée avant de voir les résultats** : candidat retenu = meilleur ΔR apparié sur **dev 900–999** (appareils neufs) parmi ceux significatifs sur dev 0–99 ;
+la val (3 graines, Holm sur toutes les méthodes) est rapportée pour tous, sans re-sélection ; test lu une seule fois après accord.
