@@ -20,15 +20,17 @@ data/, runs/   données générées (non versionnées)
 
 ## Challenge 1 : détection, en bref → [challenge1/README.md](challenge1/README.md)
 
-Une **régression logistique** sur deux cartes (filtre adapté + lissage large) bat le meilleur filtre classique, le **filtre adapté** :
+Trois étapes :
 
-| test, 400 scènes | Régression logistique | Filtre adapté |
+1. **Régression logistique** sur deux cartes physiques : robuste, mais plafonne à bas SNR.
+2. **U-Net** sur un générateur infini : nettement meilleur, mais il s'effondre sur les artefacts qu'il n'a jamais vus.
+3. **U-Net + familles d'artefacts**, testé en **leave-one-family-out** : on entraîne sans une famille, puis on teste sur elle (runs en cours).
+
+| test, 400 scènes | Régression logistique | U-Net (lowsnr) |
 |---|---|---|
-| obj F1 (interdots trouvés) | **0,924** [0,909 ; 0,937] | 0,863 [0,845 ; 0,881] |
-| tol F1 (pixel ±1 px) | **0,954** | 0,868 |
-| frames du challenge 2 (obj F1) | **0,62** | 0,14 |
-
-Le poids négatif de la feature large lui apprend à rejeter les lignes de charge. Le README du dossier détaille la démarche, les métriques (Dice, tol F1, obj F1 et pourquoi l'obj F1 sert à choisir), les masques prédits, la robustesse et la limite de détection.
+| obj F1 (interdots trouvés) | 0,924 | **0,979** |
+| frames du challenge 2 (obj F1) | 0,62 | **0,96** |
+| robustesse aux artefacts (1 = insensible) | **0,935** | 0,872 |
 
 ## Challenge 2 : optimisation → [challenge2/README.md](challenge2/README.md)
 

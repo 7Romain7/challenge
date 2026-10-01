@@ -30,7 +30,7 @@ from detection.synth import PoolSampler, SynthConfig
 
 def parse_args(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--arch", required=True, choices=["unet", "transunet", "segformer", "vit"])
+    ap.add_argument("--arch", required=True, choices=["unet", "unet_robust", "unet16_robust", "transunet", "segformer", "vit"])
     ap.add_argument("--out", required=True)
     ap.add_argument("--pool", default="data/pool")
     ap.add_argument("--val", default="data/eval/val")
@@ -54,6 +54,8 @@ def parse_args(argv=None):
     ap.add_argument("--affine", action="store_true", help="sandbox: random scale+shear")
     ap.add_argument("--polarity", action="store_true", help="sandbox: random sign flip")
     ap.add_argument("--noise-jitter", type=float, default=0.0, help="sandbox: noise sigma x U(1-j,1+j)")
+    ap.add_argument("--artifacts", default="", help="randomised generator: comma list of white,pink,drift,jumps,stripes,lowpass,saturate,spikes")
+    ap.add_argument("--p-artifact", type=float, default=0.3)
     # monitoring
     ap.add_argument("--eval-every", type=int, default=2000)
     ap.add_argument("--n-val", type=int, default=None)
@@ -107,7 +109,7 @@ def main(argv=None) -> None:
     if dev.type == "cpu":
         amp_dtype = None
     if args.lr is None:
-        args.lr = 1e-3 if args.arch == "unet" else 5e-4
+        args.lr = 1e-3 if args.arch.startswith("unet") else 5e-4
 
     scfg = SynthConfig(
         symmetry=not args.no_symmetry,
@@ -115,6 +117,8 @@ def main(argv=None) -> None:
         affine=args.affine,
         polarity=args.polarity,
         noise_jitter=args.noise_jitter,
+        artifacts=tuple(a for a in args.artifacts.split(",") if a),
+        p_artifact=args.p_artifact,
     )
     sampler = PoolSampler(args.pool, dev, scfg, pool_size=args.pool_size, seed=args.seed)
     val = EvalSet(args.val, limit=args.n_val)

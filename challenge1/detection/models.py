@@ -297,7 +297,42 @@ ARCHS = {
 }
 
 
+class PhysInput(nn.Module):
+    """Physical input conditioning, part of the model (so it is applied at inference too).
+
+    On top of the global median/MAD normalisation done by the caller:
+    * row-median subtraction: removes per-line offsets (stripes, drift, charge jumps), the
+      same prior as the classical detectors (sticks are sparse, so the median is background);
+    * re-scaling by the MAD, so the input stays in units of noise sigma;
+    * de-spiking: a pixel above 6 sigma whose 8 neighbours all stay below min(30 % of it,
+      3.5 sigma) is an isolated glitch, not a stick (a stick is >= 4 px long, its neighbours
+      are bright too): it is replaced by its 3x3 median. Weak sticks (< 6 sigma) are never
+      touched. Measured: removes 90 % of +-10 spikes, alters 0.4 % of stick pixels (those
+      are single bright pixels, indistinguishable from a glitch).
+    No learned parameter; the sign is left to the network (polarity is augmented).
+    """
+
+    def __init__(self, spike_z: float = 6.0, spike_ratio: float = 0.3, spike_cap: float = 3.5) -> None:
+        super().__init__()
+        self.spike_z, self.spike_ratio, self.spike_cap = spike_z, spike_ratio, spike_cap
+
+    def forward(self, x):
+        b, _, h, w = x.shape
+        x = x - x.median(dim=-1, keepdim=True).values
+        mad = x.flatten(1).abs().median(dim=1).values.view(b, 1, 1, 1)
+        x = x / (1.4826 * mad + 1e-6)
+        p = F.unfold(F.pad(x, (1, 1, 1, 1), mode="replicate"), 3).view(b, 9, h, w)
+        neigh = torch.cat([p[:, :4], p[:, 5:]], 1).abs().amax(1, keepdim=True)
+        med = p.median(dim=1, keepdim=True).values
+        spike = (x.abs() > self.spike_z) & (neigh < (self.spike_ratio * x.abs()).clamp_max(self.spike_cap))
+        return torch.where(spike, med, x)
+
+
 def build_model(name: str) -> nn.Module:
+    if name == "unet_robust":  # U-Net behind the physical input conditioning
+        return nn.Sequential(PhysInput(), Padded(UNet(), ARCHS["unet"][1]))
+    if name == "unet16_robust":  # same, 4x fewer parameters (base 16: ~0.5 M), capacity axis
+        return nn.Sequential(PhysInput(), Padded(UNet(base=16), ARCHS["unet"][1]))
     make, stride = ARCHS[name]
     return Padded(make(), stride)
 

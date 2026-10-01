@@ -100,6 +100,10 @@ class SynthConfig:
     affine_shear: float = 0.25
     polarity: bool = False
     noise_jitter: float = 0.0
+    # "randomised generator": acquisition artefacts the official generator never makes,
+    # each family applied independently with probability p_artifact (see _artifacts).
+    artifacts: tuple[str, ...] = ()
+    p_artifact: float = 0.3
 
 
 class PoolSampler:
@@ -171,7 +175,68 @@ class PoolSampler:
             b, h, w, c.noise_sigma_pixel * js, c.noise_sigma_h * js, c.sigma_blur, self.device, self.gen
         )
         x = i * t + noise
+        if c.artifacts:
+            x = self._artifacts(x)
         return robust_normalize(x), y
+
+    def _artifacts(self, x: torch.Tensor) -> torch.Tensor:
+        """Lab artefacts on the raw image (noise sigma_pix = 0.9). Ranges cover and slightly
+        exceed the robustness suite; families listed in neither are never seen."""
+        b, _, h, w = x.shape
+        t = h * w
+        dev, c = self.device, self.cfg
+        sig = c.noise_sigma_pixel
+
+        def pick():  # which samples get this family, and a U(0, 1) severity each
+            return (self._rand(b, 1, 1, 1) < c.p_artifact).float(), self._rand(b, 1, 1, 1)
+
+        fam = set(c.artifacts)
+        if "white" in fam:
+            m, u = pick()
+            x = x + m * 2.5 * u * sig * torch.randn(x.shape, device=dev, generator=self.gen)
+        if "pink" in fam:
+            m, u = pick()
+            f = torch.fft.rfftfreq(t, device=dev).clamp_min(1.0 / t)
+            spec = torch.complex(torch.randn(b, f.numel(), device=dev, generator=self.gen),
+                                 torch.randn(b, f.numel(), device=dev, generator=self.gen)) / f.sqrt()
+            p = torch.fft.irfft(spec, n=t)
+            p = (p / p.std(dim=1, keepdim=True)).view(b, 1, h, w)
+            x = x + m * 2.5 * u * sig * p
+        if "drift" in fam:
+            m, u = pick()
+            tt = torch.linspace(-1, 1, t, device=dev)
+            k = 2 * self._rand(b, 3) - 1
+            d = k[:, :1] * tt + k[:, 1:2] * (tt**2 - 1 / 3) + k[:, 2:] * (tt**3 - 0.6 * tt)
+            d = (d - d.amin(1, keepdim=True)) / (d.amax(1, keepdim=True) - d.amin(1, keepdim=True) + 1e-9)
+            x = x + m * 8 * u * (d - 0.5).view(b, 1, h, w)
+        if "jumps" in fam:
+            m, u = pick()
+            ev = self._rand(b, t) < 4.0 / t
+            state = (torch.cumsum(ev.int(), 1) + (self._rand(b, 1) < 0.5).int()) % 2
+            lev = state.float() - state.float().mean(1, keepdim=True)
+            x = x + m * 8 * u * lev.view(b, 1, h, w)
+        if "stripes" in fam:
+            m, u = pick()
+            x = x + m * 2.5 * u * c.noise_sigma_h * torch.randn(b, 1, h, 1, device=dev, generator=self.gen)
+        if "lowpass" in fam:  # 1-pole filter along the fast axis (lock-in time constant)
+            m, u = pick()
+            if m.any():
+                a = torch.exp(-1.0 / (0.2 + 2.3 * u))[..., 0]  # tau in [0.2, 2.5] px, (b, 1, 1)
+                y = x.clone()
+                for j in range(1, w):
+                    y[..., j] = a * y[..., j - 1] + (1 - a) * x[..., j]
+                x = torch.where(m > 0, y, x)
+        if "saturate" in fam:
+            m, u = pick()
+            cc = 2.0 + 13.0 * (1 - u)  # c in [2, 15], smaller = stronger
+            med = x.flatten(1).median(1).values.view(b, 1, 1, 1)
+            x = torch.where(m > 0, med + cc * torch.tanh((x - med) / cc), x)
+        if "spikes" in fam:
+            m, u = pick()
+            hit = (self._rand(b, 1, h, w) < 0.03 * u) & (m > 0)
+            amp = (5 + 10 * self._rand(b, 1, h, w)) * torch.where(self._rand(b, 1, h, w) < 0.5, -1.0, 1.0)
+            x = x + hit.float() * amp
+        return x
 
     def _affine(self, t: torch.Tensor, y: torch.Tensor):
         """Random anisotropic scale + shear around the image centre (sandbox)."""
