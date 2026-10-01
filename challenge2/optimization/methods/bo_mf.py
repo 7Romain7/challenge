@@ -113,5 +113,8 @@ class MultiFidelityBO(BayesOpt):
                 mean_obs, _ = gp.predict(B)
                 cand = self._candidates(s, B, mean_obs)
                 m, sd = gp.predict(cand)
-                s.evaluate(cand[int(np.argmax(GP.expected_improvement(m, sd, mean_obs.max())))])
+                if getattr(self, "acq", "ei") == "ucb":  # GP-UCB, sqrt(beta) = 2 fixed a priori
+                    s.evaluate(cand[int(np.argmax(m + 2.0 * sd))])
+                else:
+                    s.evaluate(cand[int(np.argmax(GP.expected_improvement(m, sd, mean_obs.max())))])
         s.set_reco(self.recommend(s))

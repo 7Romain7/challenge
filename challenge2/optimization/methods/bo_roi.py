@@ -28,8 +28,9 @@ class ROIBayesOpt(MultiFidelityBO):
 
     def __init__(self, *a, switch: float = 0.4, patch: float = 0.05, disk_px: int = 5,
                  local_sd: float = 0.08, lit_thr: float | None = None, max_switch: float = 0.8,
-                 **kw) -> None:
+                 acq: str = "ei", **kw) -> None:
         super().__init__(*a, switch=switch, **kw)
+        self.acq = acq  # phase-1 acquisition: "ei" or "ucb"
         # adaptive switch: stay on full frames past `switch` until some point is lit
         # (lower bound y - se > lit_thr, in floor units), at most until `max_switch`
         self.lit_thr, self.max_switch = lit_thr, max_switch
@@ -77,6 +78,13 @@ class ROIBayesOpt(MultiFidelityBO):
 
     def _phase1(self, s: Session) -> bool:
         cap, px = s.bx.pixel_cap, s.bx.n_pixels
+        if self.switch == "auto":
+            # split derived from both caps: keep full frames while the pixels left after
+            # one more frame exceed what the patch phase can spend with the measurements left
+            frame = round(s.cfg.span / s.step) ** 2
+            patch = round(self.patch / s.step) ** 2
+            meas_after = s.bx.meas_cap - s.bx.n_meas - 1 - self.verify_frames
+            return s.bx.remaining - frame - self.reserve(s) > meas_after * patch
         if px < self.switch * cap:
             return True
         return self.lit_thr is not None and px < self.max_switch * cap and not self._lit(s)
@@ -90,7 +98,10 @@ class ROIBayesOpt(MultiFidelityBO):
                 self._step_full(s)
             return
         self.focus = chosen[0]
-        b_best = super().recommend(s)
+        self._phase2(s, super().recommend(s))
+
+    def _phase2(self, s: Session, b_best) -> None:
+        """Local BO on the ROI-patch objective of the focus interdots, around ``b_best``."""
         self.focus_best = b_best
         cost = len(self.focus) * round(self.patch / s.step) ** 2
         n_meas_left = lambda: s.bx.meas_cap - s.bx.n_meas - self.verify_frames  # noqa: E731

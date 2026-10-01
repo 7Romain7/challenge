@@ -62,5 +62,8 @@ def region_diagnosis(exp, wp: dict, visited: list) -> dict:
     r_region = (f_star - (m.base + m.regions[k_hat].amplitude)) / max(f_star - m.base, 1e-9)
     half = m.base + 0.5 * m.regions[best].amplitude
     seen = any(m.region_factor(m.regions[best], v) >= half for v in visited)
+    # how lit the best region ever was over the visits, as a fraction of its amplitude
+    lit = max(((m.region_factor(m.regions[best], v) - m.base) / m.regions[best].amplitude
+               for v in visited), default=0.0)
     return {"region_ok": bool(k_hat == best), "R_region": float(r_region),
-            "best_visited": bool(seen)}
+            "best_visited": bool(seen), "best_lit_max": float(lit)}
