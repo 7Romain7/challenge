@@ -15,6 +15,7 @@ from .random_search import RandomSearch
 from .meta_acq import MetaAcqROI
 from .bo_region import RegionBO
 from .bo_coarse import CoarseExploreROI
+from .race import RaceCoarse, RaceROI
 from .classic import CMAESSearch, OfficialCoordAscent, ROICMAES, SPSAAdam
 
 _M5 = SessionConfig(detector="m5_min")  # front-end with the frozen challenge-1 detector
@@ -41,6 +42,14 @@ REGISTRY = {"random": RandomSearch, "bo": BayesOpt,
             # coarse (2x step) survey + native confirmation frames, then ROI patches
             "bo_coarse_dlf": partial(CoarseExploreROI, session_cfg=SessionConfig(**_DL)),
             "bo_coarse": CoarseExploreROI,
+            # race two regions in the ROI phase (on top of the two best explorers)
+            "bo_roi_race_dlf": partial(RaceROI, switch="auto", acq="ucb", session_cfg=SessionConfig(**_DL)),
+            "bo_coarse_race_dlf": partial(RaceCoarse, acq="ucb", session_cfg=SessionConfig(**_DL)),
+            "bo_roi_race": partial(RaceROI, switch="auto", acq="ucb"),
+            "bo_coarse_race": partial(RaceCoarse, acq="ucb"),
+            # same methods with the training-free filter front-end (does the U-Net matter?)
+            "bo_roi_auto_ucb": partial(ROIBayesOpt, switch="auto", acq="ucb"),
+            "bo_coarse_ucb": partial(CoarseExploreROI, acq="ucb"),
             "bo_region_ucb_dlf": partial(RegionBO, acq="ucb", session_cfg=SessionConfig(**_DL)),
             "bo_coarse_ucb_dlf": partial(CoarseExploreROI, acq="ucb", session_cfg=SessionConfig(**_DL)),
             "bo_roi_lit_dlf": partial(ROIBayesOpt, lit_thr=1.0, session_cfg=SessionConfig(**_DL)),

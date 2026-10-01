@@ -15,7 +15,7 @@ registered at the floor (interdots fade), so they are centred on the drift *pred
 inside the same trust region, and amplitudes are read as the maximum filter response in a
 disk sized by the predicted drift uncertainty.
 
-Allocation (from both caps, no tuned share): ROI patches keep ``roi_meas`` measurements;
+Allocation (from both caps, no tuned share): ROI patches keep ``roi_meas`` of the measurement cap;
 the rest of phase 1 is cycles of ``ratio`` coarse frames + 1 native frame, placed on the
 best coarse point (confirmation + registration), or on a maximin feasible point while
 nothing is lit, which keeps the trust region growing.
@@ -36,7 +36,7 @@ from .gp import GP
 class CoarseExploreROI(ROIBayesOpt):
     name = "bo_coarse"
 
-    def __init__(self, *a, coarse: int = 2, ratio: int = 4, roi_meas: int = 90, **kw) -> None:
+    def __init__(self, *a, coarse: int = 2, ratio: int = 4, roi_meas: float = 0.3, **kw) -> None:
         kw.setdefault("switch", "auto")
         super().__init__(*a, **kw)
         self.coarse, self.ratio, self.roi_meas = coarse, ratio, roi_meas
@@ -110,10 +110,11 @@ class CoarseExploreROI(ROIBayesOpt):
         frame = round(s.cfg.span / s.step) ** 2
         cframe = round(s.cfg.span / (self.coarse * s.step)) ** 2
         patch = round(self.patch / s.step) ** 2
-        roi_px = self.roi_meas * patch
+        roi_meas = int(round(self.roi_meas * s.bx.meas_cap))  # share of the cap (90 of 300)
+        roi_px = roi_meas * patch
         k = 0
         while True:
-            meas_left = s.bx.meas_cap - s.bx.n_meas - self.verify_frames - self.roi_meas
+            meas_left = s.bx.meas_cap - s.bx.n_meas - self.verify_frames - roi_meas
             px_left = s.bx.remaining - self.reserve(s) - roi_px
             fine_turn = k % (self.ratio + 1) == self.ratio
             cost = frame if fine_turn else cframe

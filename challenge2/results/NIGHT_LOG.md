@@ -31,3 +31,14 @@ Test 10000–10199 intact.
 
 **Règle de décision fixée avant de voir les résultats** : candidat retenu = meilleur ΔR apparié sur **dev 900–999** (appareils neufs) parmi ceux significatifs sur dev 0–99 ;
 la val (3 graines, Holm sur toutes les méthodes) est rapportée pour tous, sans re-sélection ; test lu une seule fois après accord.
+
+## Résultats intermédiaires (00 h 45)
+dev 0–99 (ΔR vs bo_roi_dlf, p Holm) : roi_auto_ucb −0,022 (0,011) · region_ucb −0,020 (0,016) · méta finale −0,019 (0,016) · coarse −0,015 (0,21) · coarse_ucb −0,011 (0,21) · region −0,012 (0,21)
+dev 900–999, appareils neufs (ΔR, p Holm) : **coarse_ucb −0,046 (4e-7), R 0,064, succès 43 %** · coarse −0,037 (7e-4) · region_ucb −0,019 (0,015) · region −0,018 (0,015) · roi_auto_ucb −0,016 (4e-4, succès 39 %) ; référence bo_roi_dlf R 0,164, succès 22 %
+Lecture : le gain UCB se confirme sur appareils neufs ; coarse_ucb est la meilleure sur 900–999 mais n'était pas significative sur 0–99 → la val (3 graines) tranche.
+
+## Deuxième vague (00 h 50)
+| 14 | courbe de budget, pixels **et** mesures ensemble (250 k/75 … 4 M/1 200), roi_auto_ucb et coarse_ucb | | | | en cours |
+| 15 | U-Net vs filtre dans les deux meilleures méthodes (dev 0–99, 900–999, S1/S5a/S7) | | | | en cours |
+| 16 | robustesse S1–S7 de coarse_ucb | | | | en cours |
+| 17 | **course entre deux régions** en phase ROI (vise les 11 cas « vue mais pas choisie ») ; retenue seulement si significative sur dev 0–99 **et** 900–999 | | | | en cours |

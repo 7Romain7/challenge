@@ -25,7 +25,7 @@ from optimization.methods import REGISTRY
 from . import truth
 from .seeds import SPLITS
 
-CHECKPOINTS = (100_000, 250_000, 500_000, 1_000_000, 2_000_000)
+CHECKPOINTS = (100_000, 250_000, 500_000, 1_000_000, 2_000_000, 4_000_000)
 
 
 def shifted_config(name: str):
@@ -61,7 +61,7 @@ def regret(f_star: float, base: float, f: float) -> float:
 
 
 def run_one(task: tuple) -> dict:
-    method, seed, budget, run_seed, shift = (task + (None,))[:5]
+    method, seed, budget, run_seed, shift, meas_cap = (task + (None, 300))[:6]
     t0 = time.time()
     try:
         exp = (new_experiment(seed=seed) if not shift
@@ -74,7 +74,7 @@ def run_one(task: tuple) -> dict:
            "base": base, "f_star": f_star, **desc}
     start_wp = dict(exp.start)
     out["R_start"] = regret(f_star, base, truth.true_factor(exp, start_wp))
-    bx = BlindExperiment(exp, pixel_cap=budget)
+    bx = BlindExperiment(exp, pixel_cap=budget, meas_cap=meas_cap)
     try:
         res = REGISTRY[method](run_seed=run_seed).run(bx)
     except Exception as e:  # keep the sweep alive, record the failure
@@ -116,10 +116,11 @@ def main() -> None:
     ap.add_argument("--run-seeds", type=int, default=1)
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--out", default="challenge2/results/run.jsonl")
+    ap.add_argument("--meas-cap", type=int, default=300, help="measurement cap (default 300)")
     ap.add_argument("--shift", default=None, help="shifted configuration S1..S7 (PROTOCOL 6)")
     a = ap.parse_args()
     seeds = list(SPLITS[a.split])[a.start : a.start + a.n]
-    tasks = [(m, s, a.budget, rs, a.shift) for m in a.methods for s in seeds for rs in range(a.run_seeds)]
+    tasks = [(m, s, a.budget, rs, a.shift, a.meas_cap) for m in a.methods for s in seeds for rs in range(a.run_seeds)]
     pathlib.Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     ctx = mp.get_context("spawn")
     with ctx.Pool(a.workers, maxtasksperchild=1) as pool, open(a.out, "w") as f:
