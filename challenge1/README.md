@@ -107,9 +107,42 @@ On lit deux quantités :
 
 On fait tout cela à deux capacités, `unet16_robust` (0,5 M) et `unet_robust` (1,9 M), pour voir si un réseau plus petit se spécialise moins. Cela fait 2 × 11 = 22 runs de 8000 steps, avec seuils sur val et suite de robustesse en rapport seulement.
 
-**Statut : runs en cours** sur le cluster. Le tableau `results/lofo/lofo.md` (obj F1 moyen et pire niveau par famille, transfert, écart, test propre) sera produit par `python -m detection.lofo report`.
+#### Résultats
 
-**Lecture attendue.** Un transfert positif sur les familles « proches » (white ↔ pink, drift ↔ jumps ↔ stripes) et un transfert nul sur les familles orthogonales (spikes, saturate, polarity) voudraient dire que la randomisation généralise par **ressemblance**, pas par principe. Dans ce cas, le garde-fou reste nécessaire : basculer sur la régression logistique quand les statistiques du résidu sortent du domaine d'entraînement.
+obj F1 sur la famille f, moyenné sur ses 3 niveaux (pire niveau entre parenthèses). Un seed par run. Tableau complet, avec le test propre de chaque run : [`results/lofo/lofo.md`](results/lofo/lofo.md).
+
+| famille f | none 0,5 M | **sans f 0,5 M** | all 0,5 M | none 1,9 M | **sans f 1,9 M** | all 1,9 M |
+|---|---|---|---|---|---|---|
+| white | 0,933 (0,89) | **0,940 (0,91)** | 0,945 (0,92) | 0,915 (0,86) | **0,935 (0,90)** | 0,945 (0,92) |
+| pink | 0,956 (0,94) | **0,956 (0,94)** | 0,957 (0,94) | 0,958 (0,94) | **0,956 (0,94)** | 0,956 (0,94) |
+| drift | 0,977 (0,98) | **0,972 (0,97)** | 0,973 (0,97) | 0,976 (0,98) | **0,976 (0,98)** | 0,974 (0,97) |
+| jumps | 0,958 (0,94) | **0,964 (0,96)** | 0,971 (0,97) | 0,953 (0,93) | **0,965 (0,96)** | 0,973 (0,97) |
+| stripes | 0,977 (0,98) | **0,975 (0,97)** | 0,973 (0,97) | 0,976 (0,98) | **0,976 (0,98)** | 0,974 (0,97) |
+| lowpass | 0,969 (0,95) | **0,965 (0,95)** | 0,975 (0,97) | 0,960 (0,93) | **0,964 (0,95)** | 0,976 (0,98) |
+| saturate | 0,974 (0,97) | **0,974 (0,97)** | 0,972 (0,97) | 0,974 (0,97) | **0,974 (0,97)** | 0,973 (0,97) |
+| **spikes** | 0,706 (0,37) | **0,720 (0,40)** | 0,970 (0,96) | 0,705 (0,37) | **0,777 (0,53)** | 0,972 (0,97) |
+| **polarity** | 0,978 (0,98) | **0,001 (0,00)** | 0,972 (0,97) | 0,977 (0,98) | **0,105 (0,11)** | 0,973 (0,97) |
+| test propre | 0,976 | 0,972–0,976 | 0,973 | 0,976 | 0,974–0,978 | 0,974 |
+| score de robustesse (25 jeux) | 0,955 | — | 0,994 | 0,952 | — | 0,994 |
+
+Le score de robustesse est la même quantité que dans le tableau du haut, où le U-Net sans `PhysInput` est à 0,872. Mais `all` a vu toutes les familles : son 0,994 est un **plafond**, pas une mesure de robustesse.
+
+#### Lecture
+
+1. **Le prétraitement physique fait l'essentiel.** Avec `PhysInput` seul (`none`), drift, stripes, saturate et pink sont déjà à ≥ 0,956, et les y ajouter à l'entraînement ne change rien (± 0,006). Le score de robustesse passe de 0,872 à 0,95 sans un seul artefact appris ; seule la polarité est augmentée, et elle compte dans ce gain.
+2. **Les familles ne se transfèrent presque pas.** Le transfert (sans f − none) reste ≤ +0,02 partout ; il est même nul entre familles « proches » comme white et pink. La randomisation protège **ce qu'elle couvre**, pas un artefact nouveau : elle généralise par couverture, pas par principe.
+3. **Deux familles orthogonales sont catastrophiques si on ne les voit pas.**
+   - La **polarité** : sans elle, l'obj F1 tombe à 0,00–0,11, alors que les 8 autres familles sont vues. Le réseau apprend le signe des sticks, et rien d'autre ne le lui enlève.
+   - Les **spikes** : 0,72–0,78 (pire niveau 0,40–0,53) contre 0,97 quand on les voit. Le dé-spiking de `PhysInput` ne suffit pas à 2 % de pixels touchés.
+4. **La capacité ne change presque rien.** 0,5 M et 1,9 M font pareil sur le test propre (0,973 / 0,974) et sur les familles vues. Le gros réseau résiste un peu mieux aux deux familles inconnues (spikes 0,78 contre 0,72), mais avec un seul seed cet écart n'est pas établi. **Le U-Net à 0,5 M suffit.**
+5. **Le coût est faible.** Randomiser les 8 familles coûte 0,003 d'obj F1 sur le test propre.
+
+**Conséquence pour une vraie puce.** Ce qu'on ne randomise pas, on ne l'apprend pas. Trois règles en découlent :
+- **imposer par construction** les invariances connues : la polarité est fixée par l'expérimentateur ou toujours augmentée, et les spikes passent par le dé-spiking puis sont vus à l'entraînement ;
+- **couvrir** toutes les familles physiquement plausibles ;
+- **garder le garde-fou** : basculer sur la régression logistique quand les statistiques du résidu sortent du domaine d'entraînement, parce que le prochain artefact inconnu se comportera comme la polarité ou les spikes, pas comme drift.
+
+La suite d'artefacts est versionnée dans [`robustness_suite/`](robustness_suite/README.md), avec un harnais pour noter **n'importe quel détecteur** : `python -m detection.robustness eval-fn --fn module:fonction`.
 
 ---
 
@@ -145,7 +178,7 @@ uv run python -m detection.data_gen pool --n 30000 --out data/pool --workers 32
 uv run python -m detection.data_gen sets --out data/eval --workers 32
 uv run python -m detection.train --arch unet --seed 0 --steps 14000 --warmup 300 --eval-every 1000 --compile --intensity-law loguniform --out runs/fast_unet_lowsnr
 uv run python -m detection.export_dl runs/fast_unet_lowsnr challenge1/models/unet_lowsnr.pt
-uv run python -m detection.robustness make                                  # suite d'artefacts
+uv run python -m detection.robustness make                                  # suite d'artefacts (ou : unpack, depuis robustness_suite/)
 uv run python -m detection.evaluate --runs "runs/fast_unet*" --eval-dir data/robustness --out challenge1/results/robustness
 uv run python -m detection.lofo jobs                                        # 22 lignes "nom|args" ; chacune -> bash detection/lofo_job.sh nom args
 uv run python -m detection.lofo report --out challenge1/results/lofo
@@ -161,7 +194,8 @@ masks = predict_mask(model, thr, images, device="cuda")   # images : (N, H, W) C
 |---|---|
 | [`detection/`](detection/) | code : `baselines.py` (partie 1), `data_gen.py`, `synth.py`, `models.py`, `train.py`, `evaluate.py` (partie 2), `robustness.py`, `lofo.py` (partie 3), [`PROTOCOL.md`](detection/PROTOCOL.md) |
 | [`models/`](models/) | U-Net et TransUNet lowsnr figés (float16 + seuil) |
-| [`results/`](results/README.md) | tableaux bruts : `baselines.md`, `dl_p4/`, `robustness/`, `p4_m5/` |
+| [`robustness_suite/`](robustness_suite/README.md) | suite d'artefacts versionnée (test propre + val, 59 Mo ; les 25 jeux bruités se régénèrent bit à bit) et harnais pour tester un détecteur externe |
+| [`results/`](results/README.md) | tableaux bruts : `baselines.md`, `dl_p4/`, `robustness/`, `p4_m5/`, `lofo/` (tableau ; `per_run/` : eval, config et log des 22 runs) |
 | [`figures/`](figures/) | figures et leurs scripts |
 | [`archive/`](archive/) | v1 (test brûlé), première démo |
 

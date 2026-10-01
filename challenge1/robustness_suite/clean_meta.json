@@ -1,0 +1,43 @@
+{
+  "name": "clean",
+  "n": 200,
+  "seed_base": 20000000,
+  "kind": "gen",
+  "generator_config": {
+    "scene_span": 0.3,
+    "scene_step": 0.002,
+    "n_dots": 100,
+    "avg_spacing": 0.08,
+    "var_spacing": 7e-05,
+    "var_interdot_middle": 0.001,
+    "angle_alpha": 1.0,
+    "angle_beta": 5.0,
+    "stick_theta": 0.7853981633974483,
+    "stick_theta_jitter": 0.1,
+    "length_frac": [
+      0.1,
+      0.2
+    ],
+    "width_frac": [
+      0.1,
+      0.2
+    ],
+    "intensity_range": [
+      -33.0,
+      -1.0
+    ],
+    "intensity_jitter": 0.1,
+    "line_intensity_frac": 0.5,
+    "p_appear": 0.7,
+    "p_line": 0.2,
+    "sigma_blur": 0.5,
+    "noise_sigma_pixel": 0.9,
+    "noise_sigma_h": 0.7
+  },
+  "scan_window": {
+    "span_h": 0.3,
+    "span_v": 0.3,
+    "step_h": 0.002,
+    "step_v": 0.002
+  }
+}

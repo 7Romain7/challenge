@@ -217,9 +217,79 @@ def eval_m5(robust: Path, val: Path, train: Path, out: Path) -> None:
     print(md)
 
 
+def pack(robust: Path, out: Path) -> None:
+    """Git-friendly copy of the suite (~60 MB instead of ~570 MB). The perturbations are seeded
+    (make), so only the clean reference is stored, exactly (float32): unpack re-runs make and
+    rebuilds every perturbed set bit for bit. val (threshold selection) is stored in float16
+    (error <= 0.03, noise sigma 0.9)."""
+    out.mkdir(parents=True, exist_ok=True)
+    for name, dtype in (("clean", np.float32), ("val", np.float16)):
+        d = robust / name
+        m = np.load(d / "masks.npy")
+        np.savez_compressed(out / f"{name}.npz", images=np.load(d / "images.npy").astype(dtype),
+                            masks=np.packbits(m.astype(bool), axis=-1), shape=m.shape)
+        shutil.copy(d / "sticks.jsonl", out / f"{name}_sticks.jsonl")
+        shutil.copy(d / "meta.json", out / f"{name}_meta.json")
+    print(f"packed clean + val -> {out}")
+
+
+def unpack(pack_dir: Path, out: Path) -> None:
+    """Rebuild the evaluate.py layout: clean/ and val/ from the pack, the 25 perturbed sets by
+    make (same seeds, bit-identical), test/ = clean/ (the unperturbed reference)."""
+    src = out / "_clean_src"  # make() rewrites clean/ itself, so read from a staging copy
+    for name, d in (("clean", src), ("val", out / "val")):
+        z = np.load(pack_dir / f"{name}.npz")
+        d.mkdir(parents=True, exist_ok=True)
+        np.save(d / "images.npy", z["images"].astype(np.float32))
+        np.save(d / "masks.npy", np.unpackbits(z["masks"], axis=-1, count=int(z["shape"][-1])).astype(np.uint8))
+        shutil.copy(pack_dir / f"{name}_sticks.jsonl", d / "sticks.jsonl")
+        shutil.copy(pack_dir / f"{name}_meta.json", d / "meta.json")
+    make(src, out, int(np.load(pack_dir / "clean.npz")["shape"][0]))
+    shutil.rmtree(src)
+    if (out / "test").exists():
+        shutil.rmtree(out / "test")
+    shutil.copytree(out / "clean", out / "test")
+    print(f"unpacked -> {out} (test = clean)")
+
+
+def eval_fn(spec: str, robust: Path, out: Path) -> None:
+    """Score ANY detector on the suite. ``spec`` = "module:function", a function mapping raw
+    images (N, 150, 150) float32 to a score map (N, 150, 150) in [0, 1]. The threshold is
+    chosen on val only, then frozen for clean and every perturbed set (report-only)."""
+    import importlib
+
+    from detection.evalsets import EvalSet, score
+
+    mod, fn = spec.split(":")
+    f = getattr(importlib.import_module(mod), fn)
+    val = EvalSet(robust / "val")
+    thr = score(np.asarray(f(np.asarray(val.images, dtype=np.float32)), dtype=np.float32), val)["thr"]
+    res = {}
+    for name in ["clean", *set_names()]:
+        es = EvalSet(robust / name)
+        r = score(np.asarray(f(np.asarray(es.images, dtype=np.float32)), dtype=np.float32), es, thr=thr)
+        res[name] = {k: r[k] for k in ("obj_f1", "tol_f1", "f1")}
+        print(f"  {name:16s} obj_f1={r['obj_f1']:.3f} tol_f1={r['tol_f1']:.3f}", flush=True)
+    rel = [res[n]["obj_f1"] / res["clean"]["obj_f1"] for n in set_names()]
+    out.mkdir(parents=True, exist_ok=True)
+    summary = {"detector": spec, "thr_val": thr, "robustness_score": float(np.mean(rel)), "sets": res}
+    (out / "robustness_eval.json").write_text(json.dumps(summary, indent=1))
+    print(f"robustness score (mean obj F1 perturbed / clean) = {summary['robustness_score']:.3f} -> {out}")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
+    e = sub.add_parser("eval-fn", help="score any detector: --fn module:function")
+    e.add_argument("--fn", required=True)
+    e.add_argument("--robust", default="data/robustness")
+    e.add_argument("--out", default="challenge1/results/robustness_external")
+    p = sub.add_parser("pack")
+    p.add_argument("--robust", default="data/robustness")
+    p.add_argument("--out", default="challenge1/robustness_suite")
+    u = sub.add_parser("unpack")
+    u.add_argument("--pack", default="challenge1/robustness_suite")
+    u.add_argument("--out", default="data/robustness")
     a = sub.add_parser("make")
     a.add_argument("--src", default="data/eval_light/test")
     a.add_argument("--out", default="data/robustness")
@@ -230,7 +300,13 @@ def main() -> None:
     b.add_argument("--train", default="data/train")
     b.add_argument("--out", default="challenge1/results/robustness")
     args = ap.parse_args()
-    if args.cmd == "make":
+    if args.cmd == "eval-fn":
+        eval_fn(args.fn, Path(args.robust), Path(args.out))
+    elif args.cmd == "pack":
+        pack(Path(args.robust), Path(args.out))
+    elif args.cmd == "unpack":
+        unpack(Path(args.pack), Path(args.out))
+    elif args.cmd == "make":
         make(Path(args.src), Path(args.out), args.n)
     else:
         eval_m5(Path(args.robust), Path(args.val), Path(args.train), Path(args.out))
