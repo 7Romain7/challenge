@@ -55,3 +55,34 @@ class M5Min:
 
     def mask(self, img: np.ndarray) -> np.ndarray:
         return self.logit(img) > self.thr
+
+
+class DLDetector:
+    """Frozen challenge-1 segmentation network (best.pt of detection.train), same interface
+    as :class:`M5Min`: ``logit(img)`` is here the stick probability, ``thr`` its val threshold.
+
+    torch / detection.models are imported lazily (GPU extra). Same input normalisation as
+    detection.evalsets.predict: per-image (x - median) / (1.4826 MAD).
+    """
+
+    def __init__(self, ckpt: str, thr: float = 0.1) -> None:
+        import torch
+
+        from detection.models import build_model
+
+        self.torch, self.thr = torch, thr
+        self.dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        ck = torch.load(ckpt, map_location=self.dev, weights_only=False)
+        self.model = build_model(ck["arch"]).to(self.dev).eval()
+        self.model.load_state_dict(ck["model"])
+
+    def logit(self, img: np.ndarray) -> np.ndarray:
+        torch = self.torch
+        x = np.asarray(img, np.float32)
+        x = (x - np.median(x)) / (1.4826 * np.median(np.abs(x - np.median(x))) + 1e-6)
+        with torch.no_grad():
+            p = torch.sigmoid(self.model(torch.from_numpy(x)[None, None].to(self.dev)).float())
+        return p[0, 0].cpu().numpy()
+
+    def mask(self, img: np.ndarray) -> np.ndarray:
+        return self.logit(img) > self.thr

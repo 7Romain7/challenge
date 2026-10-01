@@ -1,0 +1,404 @@
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+/users/eleves-b/2025/romain.auguste/c12_bench2/challenge2/optimization/methods/bo_mf.py:61: RuntimeWarning: Mean of empty slice
+  score = np.nanmean(ex, axis=0)
+400 runs ok, 0 errors
+bo       n=200 | R@100k med 0.977 (succ<=.05: 0.00) | R@250k med 0.927 (succ<=.05: 0.00) | R@500k med 0.524 (succ<=.05: 0.06) | R@1000k med 0.227 (succ<=.05: 0.15) | Rvis 0.227 | fail 1.4
+bo_roi   n=200 | R@100k med 0.977 (succ<=.05: 0.00) | R@250k med 0.927 (succ<=.05: 0.00) | R@500k med 0.223 (succ<=.05: 0.17) | R@1000k med 0.175 (succ<=.05: 0.20) | Rvis 0.175 | fail 0.6
+start R median: 0.9767060726800889

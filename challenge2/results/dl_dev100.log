@@ -1,0 +1,5 @@
+300 runs ok, 0 errors
+bo       n=100 | R@100k med 0.978 (succ<=.05: 0.00) | R@250k med 0.892 (succ<=.05: 0.00) | R@500k med 0.504 (succ<=.05: 0.05) | R@1000k med 0.194 (succ<=.05: 0.18) | Rvis 0.194 | fail 1.6
+bo_dl    n=100 | R@100k med 0.978 (succ<=.05: 0.00) | R@250k med 0.925 (succ<=.05: 0.00) | R@500k med 0.547 (succ<=.05: 0.05) | R@1000k med 0.158 (succ<=.05: 0.20) | Rvis 0.158 | fail 0.0
+bo_dl_lo n=100 | R@100k med 0.978 (succ<=.05: 0.00) | R@250k med 0.920 (succ<=.05: 0.00) | R@500k med 0.547 (succ<=.05: 0.05) | R@1000k med 0.192 (succ<=.05: 0.15) | Rvis 0.192 | fail 0.3
+start R median: 0.9775520065281305

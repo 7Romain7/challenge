@@ -20,7 +20,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from .blind import BlindExperiment
-from .detector import M5Min
+from .detector import DLDetector, M5Min
 from .perception import Perception
 from .scoring import Scorer
 from .tracking import DriftModel, register
@@ -35,6 +35,8 @@ class SessionConfig:
     k_det: float = 4.0
     detector: str = "filter"  # "filter" (k_det * sigma) or "m5_min" (frozen challenge-1 detector)
     m5_thr: float | None = None  # override of the M5_min logit threshold (operating point)
+    dl_ckpt: str = ""  # detector="dl": checkpoint of a challenge-1 network (best.pt)
+    dl_thr: float = 0.1  # its probability threshold (val-selected during training)
     shrink_z: float = 1.0
     floor_q: float = 0.3
     verify_frames: int = 2
@@ -48,6 +50,8 @@ class Session:
         self.bx = bx
         self.cfg = cfg or SessionConfig()
         det = M5Min() if self.cfg.detector == "m5_min" else None
+        if self.cfg.detector == "dl":
+            det = DLDetector(self.cfg.dl_ckpt, self.cfg.dl_thr)
         if det is not None and self.cfg.m5_thr is not None:
             det.thr = self.cfg.m5_thr
         self.percep = Perception(k_det=self.cfg.k_det, detector=det)
@@ -128,14 +132,18 @@ class Session:
         return float(np.clip(0.02 + 4.0 * sd, 0.025, self.cfg.max_radius))
 
     # --------------------------------------------------------------- evaluate
-    def evaluate(self, b, role: str = "eval", span: float | None = None) -> dict:
+    def evaluate(self, b, role: str = "eval", span: float | None = None,
+                 centre_ref=None, min_matches: int | None = None) -> dict:
+        """Measure at barriers ``b``. ``centre_ref`` (reference coordinates) overrides the
+        window centre, e.g. a zoom on chosen interdots; ``min_matches`` relaxes registration
+        for small windows that hold few interdots."""
         assert self._started, "call start() first"
         cfg = self.cfg
         span = cfg.span if span is None else span
         b = np.clip(np.asarray(b, float), -cfg.box, cfg.box)
         db = b - self.b0
         d_pred = self.drift.predict(db)
-        centre = self._focus_ref(span) + d_pred
+        centre = (self._focus_ref(span) if centre_ref is None else np.asarray(centre_ref)) + d_pred
         img = self.bx.measure(
             g1=b[0], g2=centre[0], g3=b[1], g4=centre[1], g5=b[2],
             span_h=span, span_v=span, step_h=self.step, step_v=self.step,
@@ -150,7 +158,7 @@ class Session:
         inside = np.all((self.ref + d_pred > origin - radius)
                         & (self.ref + d_pred < origin + span + radius), axis=1)
         delta, n_match = register(self.ref[inside], det, d_pred, radius)
-        ok = n_match >= cfg.min_matches
+        ok = n_match >= (cfg.min_matches if min_matches is None else min_matches)
         if ok:
             self.drift.add(db, delta)
             self._grow_reference(det, delta, frame)
