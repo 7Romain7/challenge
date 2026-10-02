@@ -1,61 +1,61 @@
-# Challenge 1 : les cinq détecteurs (hypothèses)
+# Challenge 1: the five classical detectors (assumptions)
 
-Cinq méthodes classiques partagent le même prétraitement et la même interface : une carte de score en unités de σ du bruit, puis un seuil. Elles empilent des a priori de plus en plus forts. Cette note décrit les hypothèses. Les résultats sont dans [`../README.md`](../README.md).
+Five classical methods share the same preprocessing and the same interface: a score map in units of the noise σ, then a threshold. They stack increasingly strong priors. This note describes the assumptions. Results are in [`../README.md`](../README.md).
 
-Le code est [`baselines.py`](baselines.py). [`PROTOCOL.md`](PROTOCOL.md) décrit la piste transformers (pas encore lancée) et ses pièges.
+The code is [`baselines.py`](baselines.py). The deep models are in `models.py`, `train.py`, `synth.py` and `data_gen.py`.
 
-## Prétraitement commun
+## Common preprocessing
 
-Un interdot est un creux fin (signal négatif) sur un fond strié horizontalement. Les stries suivent l'axe de scan rapide.
+An interdot is a thin dip (negative signal) on a background striped horizontally. The stripes follow the fast scan axis.
 
-1. Médiane de chaque ligne, soustraite. Les sticks occupent peu de pixels, donc la médiane estime le fond de la ligne.
-2. Inversion du signe. Le creux devient un pic.
-3. Échelle médiane / MAD (facteur 1,4826). L'image est exprimée en σ du bruit de fond. Un z-score classique serait gonflé par les sticks brillants et effacerait le rapport signal sur bruit. Un seuil peut alors se transporter d'une scène à l'autre.
+1. Subtract the median of each row. Sticks cover few pixels, so the median estimates the row background.
+2. Flip the sign. The dip becomes a peak.
+3. Scale by median / MAD (factor 1.4826). The image is expressed in σ of the background noise. A classical z-score would be inflated by bright sticks and would erase the signal-to-noise ratio. A threshold can then be moved from one scene to another.
 
-## M1. Lissage
+## M1. Smoothing
 
-Aucun a priori de forme. Gaussienne (σ ≈ 1 px), puis reblanchiment médiane / MAD de la carte filtrée.
+No shape prior. Gaussian (σ ≈ 1 px), then re-whitening of the filtered map by median / MAD.
 
-Hypothèse : un interdot est un excès local une fois le bruit haute fréquence atténué.
+Assumption: an interdot is a local excess once high-frequency noise is attenuated.
 
-Limite : tout excès lumineux franchit le seuil. Une ligne de charge, non étiquetée, répond comme un stick.
+Limit: any bright excess crosses the threshold. A charge line, which is not labelled, responds like a stick.
 
-## M2. Filtre adapté
+## M2. Matched filter
 
-A priori de forme. Banc de gabarits gaussiens allongés, axe long autour de θ ≈ π/4 (pente typique des interdots sur ce double point quantique). Chaque gabarit est de moyenne nulle et de norme L2 unité. On garde le maximum du banc, puis on reblanchit : le max biaise la loi sous l'hypothèse nulle.
+Shape prior. A bank of elongated Gaussian templates with long axis around θ ≈ π/4 (typical slope of interdots on this double quantum dot). Each template has zero mean and unit L2 norm. We keep the maximum over the bank then re-whiten, since the max biases the null distribution.
 
-Dans un bruit blanc, le filtre adapté maximise le rapport signal sur bruit pour un motif connu.
+In white noise the matched filter maximizes the signal-to-noise ratio for a known pattern.
 
-Limite : une orientation hors du banc répond peu. Un trait qui n'est pas un bâtonnet court (ligne de charge longue, autre angle) est rejeté, ce qui est le but, tant que la pente réelle reste dans le banc.
+Limit: an orientation outside the bank responds weakly. A trace that is not a short stick (long charge line, other angle) is rejected. This is the goal as long as the true slope stays in the bank.
 
-## M3. Crête hessienne
+## M3. Hessian ridge
 
-A priori de géométrie locale, sans gabarit figé. Après lissage, on retient la valeur propre la plus négative de la hessienne (courbure la plus forte à travers le trait) et on ne garde que les crêtes.
+Local geometry prior with no fixed template. After smoothing we take the most negative eigenvalue of the Hessian (strongest curvature across the trace) and keep only ridges.
 
-Hypothèse : un interdot est une vallée fine, pas une tache.
+Assumption: an interdot is a thin valley and not a blob.
 
-Limite : une ligne de charge est aussi une crête. Le filtre ne sépare pas « interdot » et « ligne ».
+Limit: a charge line is also a ridge. The filter does not separate "interdot" from "line".
 
-## M4. Hystérésis
+## M4. Hysteresis
 
-Même carte que M1, plus un a priori de cohérence spatiale. Le seuil haut germe les composantes. Un seuil bas (une fraction du haut) les prolonge. Les blobs plus petits qu'un minimum de pixels sont écartés.
+Same map as M1 plus a spatial coherence prior. The high threshold seeds components. A low threshold (a fraction of the high one) extends them. Blobs smaller than a minimum pixel count are discarded.
 
-Hypothèse : un interdot est un objet connexe, pas un pixel isolé de bruit.
+Assumption: an interdot is a connected object and not an isolated noise pixel.
 
-Limite : une ligne de charge connexe est conservée, parfois épaissie par le seuil bas.
+Limit: a connected charge line is kept and sometimes thickened by the low threshold.
 
-## M5. Régression logistique (variante retenue : `M5_min`, matched + s2)
+## M5. Logistic regression (retained variant: `M5_min`, matched + s2)
 
-Combinaison linéaire apprise des cartes précédentes. Six descripteurs par pixel : image en σ, lissage fin, lissage large, filtre adapté, crête, écart-type local. Ajustement par moindres carrés repondérés (IRLS). Environ sept poids, intercept compris.
+Learned linear combination of the previous maps. Six per-pixel features: image in σ, fine smoothing, wide smoothing, matched filter, ridge, local standard deviation. Fit by iteratively reweighted least squares (IRLS). About seven weights including the intercept.
 
-Les positifs sont rares (de l'ordre de 0,3 % des pixels). L'ajustement prend tous les positifs et un multiple de négatifs tirés au hasard. L'ordonnée à l'origine est alors mal calibrée, volontairement. Le seuil, choisi plus tard sur la validation seule, absorbe ce biais.
+Positives are rare (about 0.3 % of pixels). The fit takes all positives and a multiple of randomly drawn negatives. The intercept is then miscalibrated on purpose. The threshold, chosen later on validation only, absorbs this bias.
 
-Rôle : plancher appris, encore classique, avant d'engager un modèle à plus de capacité. Le détail de cette comparaison est théorique pour l'instant ([`PROTOCOL.md`](PROTOCOL.md)).
+Role: a learned but still classical floor before committing to a model with more capacity.
 
-## Séparation train / val / test
+## Train / val / test separation
 
-- M5 s'ajuste sur le début du train uniquement.
-- Le seuil se choisit sur la validation (F1 pixel tolérant à 1 px), puis il est figé.
-- Le test est une graine fraîche, lue une seule fois.
-- Le masque officiel vient d'un rectangle flou seuillé. Il se fragmente. L'IoU stricte mélange donc la physique et la rastérisation. Trois lectures sont prévues : pixel strict, pixel tolérant à 1 px, objet (le stick est-il localisé).
-- Le rappel selon l'amplitude du stick donne la limite de rapport signal sur bruit. Sous quelques σ, aucune de ces méthodes ne peut voir le trait.
+- M5 is fitted on the start of the train set only.
+- The threshold is chosen on validation (tolerant pixel F1 at 1 px) then frozen.
+- The test set is a fresh seed read once.
+- The official mask comes from a thresholded blurred rectangle. It fragments. Strict IoU therefore mixes physics and pixelization (how the generator snaps the rectangle onto the pixel grid). Three readings are used: strict pixel, pixel tolerant to 1 px, object (is the stick located).
+- Recall by stick amplitude gives the signal-to-noise limit. Below a few σ none of these methods can see the trace.

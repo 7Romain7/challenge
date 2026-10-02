@@ -11,7 +11,7 @@ image = i * T(template) + blur(white * s_pix + row_stripe * s_h)
   template **before** the noise, so the row-stripe noise keeps its true (fast-scan) axis.
   A horizontal/vertical flip alone would map theta -> -theta: **not** a symmetry.
 
-Optional *sandbox* shifts (off for the baseline, see PROTOCOL.md):
+Optional *sandbox* shifts (off for the baseline, see challenge1/README.md):
 * ``intensity_law="loguniform"`` — |i| log-uniform on the same support: ~40 % of scenes
                  below |i| = 4 instead of ~9 %. Challenge-2 frames live there (contrast
                  floor ``base`` = 3 away from the optimum).

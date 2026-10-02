@@ -1,72 +1,72 @@
-# Challenge 1 — résultats bruts, toutes méthodes (v2)
+# Challenge 1: raw results of the classical methods (v2)
 
-> Synthèse et figures commentées : [`../README.md`](../README.md). Dans la synthèse, **M5_min** est appelé « régression logistique » et **M2_matched** « filtre adapté ».
+> Summary and commented figures: [`../README.md`](../README.md). There, **M5_min** is called "logistic regression" and **M2_matched** "matched filter".
 
-Cinq détecteurs légers, sans torch, sur CPU, et leurs ablations. Le code est dans [`challenge1/detection/baselines.py`](../detection/baselines.py).
+Five light detectors, CPU only, no torch, and their ablations. Code: [`challenge1/detection/baselines.py`](../detection/baselines.py).
 
 ```bash
-uv run python -m detection.baselines                     # ~4 min (le 1er run génère les jeux figés, ~15 min, une seule fois)
+uv run python -m detection.baselines                     # ~4 min (the first run builds the frozen sets, ~15 min, once)
 uv run python -m detection.baselines --select dice --out challenge1/results/selection_dice
 uv run python challenge1/results/make_figs.py
 uv run python -m detection.baselines --quick             # smoke test ~40 s
 ```
 
-## Ce qui change par rapport à la v1 ([`../archive/v1_methodes_faciles/`](../archive/v1_methodes_faciles/README.md))
+## What changed from v1
 
-La v1 avait trois défauts :
-- son test (seed 2025) a été **regardé**, il est donc brûlé ;
-- son seuil était choisi par tol-F1 seul ;
-- son OOD n'était qu'un léger ajout de bruit.
+v1 (commit `3ce2a04`) had three flaws:
+- its test set (seed 2025) was **looked at**, so it is burned;
+- its threshold was chosen by tol-F1 alone;
+- its OOD set was only a slight added noise.
 
-La v2 ajoute les garde-fous suivants.
+v2 adds the following safeguards.
 
-| # | garde-fou | piège évité |
+| # | safeguard | pitfall avoided |
 |---|---|---|
-| S1 | fit sur `data/train` (seed 0) ; val, test et OOD sur les seeds de `challenge1/detection/data_gen.py` (1e7+k, 2e7+k, 3e7+…) ; images hachées pour vérifier qu'aucune n'apparaît dans deux splits | fuite entre splits, test déjà vu |
-| S2 | un seul paramètre libre par méthode, le seuil, choisi **sur val** par (obj F1 + tol F1)/2 ; tous les autres hyperparamètres sont fixés a priori par la physique ; alerte si le seuil tombe en bord de grille | sur-réglage sur val ; blobs gras qui trichent obj F1 ; largeur du masque qui triche les métriques pixel |
-| S3 | test, OOD et null scorés une seule fois avec le seuil figé ; les labels du stage 2 viennent des internes du simulateur et ne servent **qu'à l'évaluation** | sélection sur test ou sur OOD ; usage de l'état caché |
-| S4 | IC 95 % par bootstrap sur les images, bootstrap apparié contre M2, 3 seeds de fit pour M5 | différences non significatives |
-| S5 | ratio de largeur, blobs par stick trouvé, fausses alarmes sur des scènes sans sticks | triche sur les métriques |
-| S6 | parité exacte de nos comptes objet avec `detection.metrics.object_scores` | bug de métrique |
+| S1 | fit on `data/train` (seed 0); val, test and OOD on the seeds of `challenge1/detection/data_gen.py` (1e7+k, 2e7+k, 3e7+…); images hashed to check none appears in two splits | split leakage, already-seen test |
+| S2 | one free parameter per method, the threshold, chosen **on val** by (obj F1 + tol F1)/2; every other hyperparameter fixed a priori from the physics; alert if the threshold lands on a grid edge | over-tuning on val; fat blobs gaming obj F1; mask width gaming the pixel metrics |
+| S3 | test, OOD and null scored once with the frozen threshold; challenge 2 labels come from simulator internals and are used **for evaluation only** | selection on test or OOD; use of hidden state |
+| S4 | 95 % bootstrap CI over images, paired bootstrap against M2, 3 fit seeds for M5 | non-significant differences |
+| S5 | width ratio, blobs per found stick, false alarms on scenes without sticks | metric gaming |
+| S6 | exact parity of our object counts with `detection.metrics.object_scores` | metric bug |
 
-Les variantes de M5 sont fixées avant de voir les résultats :
-- **M5_logreg** : sans le pixel brut, choisie a priori ;
-- **M5_full** : avec le pixel brut, donc avec un passe-haut z − s1 ;
-- **M5_min** : matched + s2 seulement.
+The M5 variants were fixed before seeing results:
+- **M5_logreg**: without the raw pixel, chosen a priori;
+- **M5_full**: with the raw pixel, hence with a high-pass z − s1;
+- **M5_min**: matched + s2 only.
 
-## Résultats (test, 400 scènes)
+## Results (test, 400 scenes)
 
-Le tableau complet est dans [`baselines.md`](baselines.md). Les mêmes métriques avec le seuil choisi par le Dice sont dans [`selection_dice/baselines.md`](selection_dice/baselines.md).
+The full table is in [`baselines.md`](baselines.md). The same metrics with the threshold chosen by Dice are in [`selection_dice/baselines.md`](selection_dice/baselines.md).
 
-| méthode | obj F1 [IC 95 %] | tol F1 | Dice global | Dice / image | frames stage 2 (obj F1) |
+| method | obj F1 [95 % CI] | tol F1 | global Dice | Dice / image | stage 2 frames (obj F1) |
 |---|---|---|---|---|---|
-| M1 smooth | 0,868 [0,853 ; 0,881] | 0,723 | 0,283 | 0,323 | 0,37 |
-| M2 matched | 0,863 [0,845 ; 0,881] | 0,868 | 0,430 | 0,431 | 0,14 |
-| M3 ridge | 0,868 [0,854 ; 0,881] | 0,742 | 0,320 | 0,361 | 0,34 |
-| M4 hyst | 0,865 [0,850 ; 0,878] | 0,647 | 0,213 | 0,238 | 0,26 |
-| M5 logreg | 0,865 [0,850 ; 0,880] | 0,916 | 0,726 | 0,697 | 0,57 |
-| M5 full | 0,904 [0,887 ; 0,919] | 0,920 | **0,892** | **0,847** | 0,33 |
-| M5 min | **0,924** [0,909 ; 0,937] | **0,954** | 0,555 | 0,542 | **0,62** |
+| M1 smooth | 0.868 [0.853; 0.881] | 0.723 | 0.283 | 0.323 | 0.37 |
+| M2 matched | 0.863 [0.845; 0.881] | 0.868 | 0.430 | 0.431 | 0.14 |
+| M3 ridge | 0.868 [0.854; 0.881] | 0.742 | 0.320 | 0.361 | 0.34 |
+| M4 hyst | 0.865 [0.850; 0.878] | 0.647 | 0.213 | 0.238 | 0.26 |
+| M5 logreg | 0.865 [0.850; 0.880] | 0.916 | 0.726 | 0.697 | 0.57 |
+| M5 full | 0.904 [0.887; 0.919] | 0.920 | **0.892** | **0.847** | 0.33 |
+| M5 min | **0.924** [0.909; 0.937] | **0.954** | 0.555 | 0.542 | **0.62** |
 
-## Lecture
+## Reading
 
-1. **En obj F1, les filtres M1 à M4 sont indiscernables** : tous sont autour de 0,865, et l'IC de la différence avec M2 contient 0. Ils trouvent les mêmes interdots. Seule la largeur de leurs blobs diffère : le ratio de largeur va de 2,9 à 7,5.
-2. **Le Dice récompense surtout la copie de la largeur du masque.** M5_full a le meilleur Dice (0,89, ratio de largeur 0,95) mais s'effondre sur les frames du stage 2 (0,33). Son passe-haut est réglé sur le flou du simulateur.
-3. **Choisir le seuil par le Dice dégrade la détection.** Les obj F1 des filtres tombent de 0,86 à 0,49–0,75, et le stage 2 passe sous 0,12 pour toutes les méthodes sauf M5_full (`fig3_metriques.png`). Le Dice ne doit donc pas servir de critère de sélection.
-4. **M5_min est meilleur en obj F1 et en tol F1, et on aurait pu le choisir sans regarder le test** : il est aussi le meilleur sur val (sel 0,933). Mais il produit 0,28 fausse alarme par scène vide, contre 0 pour les filtres.
-5. **La vraie limite est le transfert au stage 2.** Le seuil appris sur U(1, 33) ne convient plus à |i| ≈ 3. Il faudra recalibrer le seuil sur des frames du stage 2, sans utiliser leurs labels, par exemple via le taux de fausses alarmes sur des zones vides.
+1. **In obj F1 the filters M1 to M4 are indistinguishable.** All sit around 0.865 and the CI of the difference with M2 contains 0. They find the same interdots. Only the width of their blobs differs: the width ratio goes from 2.9 to 7.5.
+2. **Dice mostly rewards copying the mask width.** M5_full has the best Dice (0.89, width ratio 0.95) yet collapses on stage 2 frames (0.33). Its high-pass is tuned to the simulator blur.
+3. **Choosing the threshold by Dice degrades detection.** Filter obj F1 falls from 0.86 to 0.49–0.75. Stage 2 falls under 0.12 for every method except M5_full (`fig3_metriques.png`). Dice must not be used as a selection criterion.
+4. **M5_min is best in obj F1 and tol F1, and could have been chosen without looking at the test.** It is also best on val (sel 0.933). It produces 0.28 false alarms per empty scene against 0 for the filters.
+5. **The real limit is transfer to stage 2.** A threshold learned on U(1, 33) no longer fits |i| ≈ 3. It must be recalibrated on stage 2 frames without using their labels, for example through the false-alarm rate on empty areas.
 
 ## Figures
 
-- `fig1_masques_test.png` : image, masque du générateur, puis le masque binaire de chaque méthode.
-- `fig2_masques_stage2.png` : la même chose sur des frames du challenge 2.
-- `fig3_metriques.png` : obj F1, tol F1 et Dice avec leurs IC, pour les deux critères de seuil.
-- `fig4_robustesse.png` : obj F1 sur chaque jeu décalé.
-- `fig5_rappel_amplitude.png` : la limite de détection en fonction de |i|.
+- `fig1_masques_test.png`: image, generator mask, then the binary mask of each method.
+- `fig2_masques_stage2.png`: the same on challenge 2 frames.
+- `fig3_metriques.png`: obj F1, tol F1 and Dice with their CIs, for both threshold criteria.
+- `fig4_robustesse.png`: obj F1 on each shifted set.
+- `fig5_rappel_amplitude.png`: the detection limit as a function of |i|.
 
-## Limites
+## Limits
 
-- Tous les décalages sont **simulés**.
-- Les jeux OOD font 150 scènes : leurs IC, non calculés, sont plus larges.
-- Le ms/img inclut toute la pile de features, partagée entre méthodes : c'est une borne haute.
-- `csd.new_experiment` plante sur les dispositifs tirés sans aucun stick. Ces seeds sont sautées et listées dans `data/eval_light/ood_stage2/meta.json`.
+- All shifts are **simulated**.
+- OOD sets have 150 scenes. Their CIs, not computed, are wider.
+- The ms/img includes the whole feature stack shared between methods. It is an upper bound.
+- `csd.new_experiment` crashes on devices drawn with no stick at all. These seeds are skipped and listed in `data/eval_light/ood_stage2/meta.json`.

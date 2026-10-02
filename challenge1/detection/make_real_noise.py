@@ -10,7 +10,7 @@ drop is due to the added noise alone. Time axis = raster order (fast scan along 
                     (amplitude ~ U(1, 3)) at Poisson times (~4 switches per frame), the
                     signature of a charge trap near the sensor dot.
 
-    python make_real_noise.py data/eval_final/test data/eval_final
+    uv run python -m detection.make_real_noise data/eval_light/test data/eval_light
 """
 import json
 import shutil

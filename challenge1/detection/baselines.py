@@ -21,7 +21,7 @@ Methods (each outputs a score map; M1-M3 are in units of noise sigma):
               the rasterisation of the official mask and the simulator PSF — see v1).
               Ablations M5_full (with z) and M5_min (matched + s2) are reported.
 
-Safeguards (each one answers a trap; cf. PROTOCOL.md section 1 and the README rules):
+Safeguards (each one answers a trap; cf. challenge1/results/README.md):
 
   S1  data       fit = data/train (official generate_dataset, seed 0); val / test / OOD =
                  data_gen seeds (1e7+k, 2e7+k, 3e7+...). Disjointness checked by hashing

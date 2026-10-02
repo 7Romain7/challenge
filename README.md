@@ -18,13 +18,13 @@ docs/          PDF de cours et de contexte (non versionnés)
 data/, runs/   données générées (non versionnées)
 ```
 
-## Challenge 1 : détection, en bref → [challenge1/README.md](challenge1/README.md)
+## Challenge 1 : détection → [challenge1/README.md](challenge1/README.md)
 
-Trois étapes :
+Trois étapes, chacune motivée par la limite de la précédente :
 
 1. **Régression logistique** sur deux cartes physiques : robuste, mais plafonne à bas SNR.
 2. **U-Net** sur un générateur infini : nettement meilleur, mais il s'effondre sur les artefacts qu'il n'a jamais vus.
-3. **U-Net + familles d'artefacts**, testé en **leave-one-family-out** : on entraîne sans une famille, puis on teste sur elle (runs en cours).
+3. **U-Net + familles d'artefacts**, testé en **leave-one-family-out** : on entraîne sans une famille, puis on teste sur elle. La randomisation protège ce qu'elle couvre, pas un artefact nouveau.
 
 | test, 400 scènes | Régression logistique | U-Net (lowsnr) |
 |---|---|---|

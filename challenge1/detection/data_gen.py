@@ -1,6 +1,6 @@
 """Generate the training *pool* and the frozen evaluation sets.
 
-Two very different products (see PROTOCOL.md, "Données"):
+Two very different products :
 
 * ``pool``  — noise-free **templates** + soft labels. A template is the clean,
   blurred render divided by the scene intensity, so at train time we can redraw

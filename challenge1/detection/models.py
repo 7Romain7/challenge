@@ -1,16 +1,9 @@
-"""Segmentation models: one CNN reference + three transformers spanning the
-locality-bias axis (most local -> least local):
+"""Segmentation models: a CNN U-Net and a hybrid TransUNet (the transformer control).
 
-* ``unet``      — plain CNN U-Net. Not a transformer: the reference every
-                  transformer has to beat to justify itself.
-* ``transunet`` — hybrid: CNN encoder to stride 8, global self-attention on the
-                  19x19 token grid (long-range context: the lattice of interdots),
-                  CNN decoder with full-resolution skips.
-* ``segformer`` — hierarchical transformer (Mix Transformer): overlapping conv patch
-                  embeddings, spatial-reduction attention, Mix-FFN, **no positional
-                  embedding** (resolution-agnostic), MLP decoder + full-res head.
-* ``vit``       — plain ViT (patch 4, global attention, no hierarchy), SETR-style
-                  progressive upsampling + a light full-res head.
+* ``unet``      -- plain CNN U-Net, the reference.
+* ``transunet`` -- CNN encoder to stride 8, global self-attention on the 19x19 token grid
+                   (long-range context: the lattice of interdots), CNN decoder with
+                   full-resolution skips.
 
 Sticks are 1-2 px wide and 4-8 px long, so every model ends with a **full-resolution**
 head fed with the raw image: a stride-4 prediction alone cannot represent them.
@@ -20,7 +13,6 @@ All attention uses ``F.scaled_dot_product_attention`` (flash / mem-efficient ker
 
 from __future__ import annotations
 
-import math
 
 import torch
 import torch.nn as nn
@@ -208,92 +200,10 @@ class TransUNet(nn.Module):
         return self.out(y)
 
 
-# --------------------------------------------------------------------------- SegFormer
-class OverlapPatchEmbed(nn.Module):
-    def __init__(self, cin, cout, k, s):
-        super().__init__()
-        self.proj = nn.Conv2d(cin, cout, k, s, k // 2)
-        self.norm = nn.LayerNorm(cout)
-
-    def forward(self, x):
-        x = self.proj(x)
-        b, c, h, w = x.shape
-        return self.norm(x.flatten(2).transpose(1, 2)), h, w
-
-
-class SegFormer(nn.Module):
-    def __init__(
-        self,
-        dims=(32, 64, 160, 256),
-        depths=(2, 2, 2, 2),
-        heads=(1, 2, 5, 8),
-        srs=(8, 4, 2, 1),
-        dec_dim=128,
-        drop_path=0.1,
-    ) -> None:
-        super().__init__()
-        dpr = torch.linspace(0, drop_path, sum(depths)).tolist()
-        self.embeds, self.stages, self.norms = nn.ModuleList(), nn.ModuleList(), nn.ModuleList()
-        cin, k = 1, 0
-        for i, (d, n, hd, sr) in enumerate(zip(dims, depths, heads, srs)):
-            self.embeds.append(OverlapPatchEmbed(cin, d, 7 if i == 0 else 3, 4 if i == 0 else 2))
-            self.stages.append(
-                nn.ModuleList(Block(d, hd, 4.0, sr, dpr[k + j], mix_ffn=True) for j in range(n))
-            )
-            self.norms.append(nn.LayerNorm(d))
-            cin, k = d, k + n
-        self.lin = nn.ModuleList(nn.Conv2d(d, dec_dim, 1) for d in dims)
-        self.fuse = conv_bn_act(4 * dec_dim, dec_dim, k=1)
-        self.head = FullResHead(dec_dim)
-
-    def forward(self, x):
-        img, feats, z = x, [], x
-        for emb, blocks, norm in zip(self.embeds, self.stages, self.norms):
-            t, h, w = emb(z)
-            for blk in blocks:
-                t = blk(t, h, w)
-            z = norm(t).transpose(1, 2).reshape(t.shape[0], -1, h, w)
-            feats.append(z)
-        size = feats[0].shape[-2:]
-        f = [
-            F.interpolate(l(f), size=size, mode="bilinear", align_corners=False)
-            for l, f in zip(self.lin, feats)
-        ]
-        return self.head(self.fuse(torch.cat(f, 1)), img)
-
-
-# --------------------------------------------------------------------------- ViT (SETR-PUP)
-class ViTSeg(nn.Module):
-    def __init__(self, patch=4, dim=192, depth=8, heads=3, drop_path=0.1) -> None:
-        super().__init__()
-        self.patch = patch
-        self.embed = nn.Conv2d(1, dim, patch, patch)
-        dpr = torch.linspace(0, drop_path, depth).tolist()
-        self.blocks = nn.ModuleList(Block(dim, heads, drop_path=p) for p in dpr)
-        self.norm = nn.LayerNorm(dim)
-        ups, c = [], dim
-        for _ in range(int(math.log2(patch))):
-            ups += [nn.Upsample(scale_factor=2, mode="bilinear", align_corners=False), conv_bn_act(c, 64)]
-            c = 64
-        self.pup = nn.Sequential(*ups)
-        self.head = FullResHead(64)
-
-    def forward(self, x):
-        t = self.embed(x)
-        b, c, h, w = t.shape
-        z = t.flatten(2).transpose(1, 2) + sincos_2d(h, w, c, x.device)
-        for blk in self.blocks:
-            z = blk(z, h, w)
-        t = self.norm(z).transpose(1, 2).reshape(b, c, h, w)
-        return self.head(self.pup(t), x)
-
-
 # --------------------------------------------------------------------------- factory
 ARCHS = {
     "unet": (lambda: UNet(base=32, depth=3), 8),
     "transunet": (lambda: TransUNet(base=32, dim=256, depth=6, heads=8), 8),
-    "segformer": (lambda: SegFormer(), 32),
-    "vit": (lambda: ViTSeg(patch=4, dim=192, depth=8, heads=3), 4),
 }
 
 

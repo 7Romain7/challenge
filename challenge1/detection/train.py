@@ -1,6 +1,6 @@
 """Train one segmentation model on the infinite synthetic stream.
 
-    uv run python -m detection.train --arch segformer --seed 0 --out runs/segformer_s0
+    uv run python -m detection.train --arch unet --seed 0 --out runs/unet_s0
 
 One run = one (arch, seed, data/augmentation setting). Checkpoint selection and the
 decision threshold use **val only**; test and OOD sets are touched by evaluate.py.
@@ -30,7 +30,7 @@ from detection.synth import PoolSampler, SynthConfig
 
 def parse_args(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--arch", required=True, choices=["unet", "unet_robust", "unet16_robust", "transunet", "segformer", "vit"])
+    ap.add_argument("--arch", required=True, choices=["unet", "unet_robust", "unet16_robust", "transunet"])
     ap.add_argument("--out", required=True)
     ap.add_argument("--pool", default="data/pool")
     ap.add_argument("--val", default="data/eval/val")

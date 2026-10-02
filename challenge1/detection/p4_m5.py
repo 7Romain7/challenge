@@ -78,7 +78,7 @@ def main() -> None:
 
     (out / "p4_m5.json").write_text(json.dumps(res, indent=1, default=float), encoding="utf-8")
     cols = [s for s, _ in SETS if s not in ("val", "null")]
-    lines = ["| méthode [fit] | " + " | ".join(cols) + " | faux blobs / img vide |",
+    lines = ["| method [fit] | " + " | ".join(cols) + " | false blobs / empty img |",
              "|---|" + "---|" * (len(cols) + 1)]
     for k, row in res.items():
         cells = [f"{row[s]['obj_f1']:.3f}" for s in cols]

@@ -1,9 +1,9 @@
 """Detection metrics — pixel, tolerant-pixel and object (interdot) level.
 
-Why three levels (PROTOCOL.md, "Métriques"):
+Why three levels:
 * the official mask is a 0.5-threshold of a blurred 1-2 px wide rectangle: it is
   often *fragmented* (~2.5 components per stick, ~2.4 px each), so strict pixel IoU
-  mostly measures sub-pixel rasterisation luck;
+  mostly measures sub-pixel pixelization luck (how the generator snaps a blurred rectangle onto the pixel grid);
 * ``tol`` metrics accept a 1-px offset (a prediction pixel counts if a GT pixel is
   within its 3x3 neighbourhood and vice versa);
 * object metrics answer the experimentalist's question: *did I find this interdot?*
