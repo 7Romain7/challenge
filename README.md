@@ -22,8 +22,8 @@ data/, runs/   generated data (not versioned)
 
 Three steps, each motivated by the limit of the previous one:
 
-1. **Logistic regression** on two physical maps: robust, but it plateaus at low SNR.
-2. **U-Net** on an infinite generator: much better, but it collapses on artefacts it has never seen.
+1. **Logistic regression** on two physical maps: robust but it plateaus at low SNR.
+2. **U-Net** on an infinite generator: much better but it collapses on artefacts it has never seen.
 3. **U-Net + artefact families**, tested with **leave-one-family-out** (LOFO): train without one family, then test on it. Randomization protects what it covers, not a new artefact.
 
 | test, 400 scenes | Logistic regression | U-Net (lowsnr) |

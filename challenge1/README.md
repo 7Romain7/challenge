@@ -94,7 +94,7 @@ The **negative** weight on the wide smoothing s2 is the interesting result. The 
 
 ![Test masks](figures/fig2_masques_test.png)
 
-**Why stop here, and why go further.** With three parameters the model is interpretable and robust. Between 2σ and 4σ, the regime of challenge 2, it finds only 37 % of the interdots. Three parameters cannot do better. We need a model that can use more context. Details: [`detection/README.md`](detection/README.md), [`results/`](results/README.md).
+**Why stop here and why go further.** With three parameters the model is interpretable and robust. Between 2σ and 4σ, the regime of challenge 2, it finds only 37 % of the interdots. Three parameters cannot do better. We need a model that can use more context. Details: [`detection/README.md`](detection/README.md), [`results/`](results/README.md).
 
 ### Step 2. The U-Net on an infinite generator
 
@@ -112,13 +112,13 @@ The gain is concentrated between 2σ and 8σ. On [2, 4) recall goes from 0.37 to
 
 ![Recall vs amplitude DL](figures/fig14_rappel_amplitude_dl.png)
 
-**Why we trained a TransUNet, and why it did not convince us.** We wanted to test the opposite hypothesis to the U-Net's pure locality. Global attention could see the periodic lattice of interdots (period about 80 mV) and use it to reject false alarms. We trained a TransUNet (CNN encoder, 6 attention blocks on a 19 × 19 token grid, CNN decoder; 5.9 M parameters) with exactly the same recipe, data and budget. It scores the same as the U-Net (0.979). The attention brings nothing measurable here for three times the parameters. So we keep the **U-Net**. We did not try other transformer families.
+**Why we trained a TransUNet and why it did not convince us.** We wanted to test the opposite hypothesis to the U-Net's pure locality. Global attention could see the periodic lattice of interdots (period about 80 mV) and use it to reject false alarms. We trained a TransUNet (CNN encoder, 6 attention blocks on a 19 × 19 token grid, CNN decoder; 5.9 M parameters) with exactly the same recipe, data and budget. It scores the same as the U-Net (0.979). The attention brings nothing measurable here for three times the parameters. So we keep the **U-Net**. We did not try other transformer families.
 
 **Warning sign.** Dice is 1.00: the network has learned the pixelization rule of the generator. It is excellent inside the simulator. It also suggests it is **specialized** to it.
 
-### Step 3. Robustness: U-Net, artefact families, and one family held out
+### Step 3. Robustness: U-Net, artefact families and one family held out
 
-The question changes. Is the U-Net good on a real chip, and not only in the simulator?
+The question changes. Is the U-Net good on a real chip and not only in the simulator?
 
 #### 3.1 The artefact suite
 
@@ -188,7 +188,7 @@ The robustness score is the same quantity as in the top table, where the U-Net w
 
 #### Reading
 
-1. **Physical preprocessing does most of the work.** With `PhysInput` alone (`none`), drift, stripes, saturate and pink are already at 0.956 or more. Adding them to training changes nothing (± 0.006). The robustness score goes from 0.872 to 0.95 without a single learned artefact. Only polarity is augmented, and it counts in this gain.
+1. **Physical preprocessing does most of the work.** With `PhysInput` alone (`none`), drift, stripes, saturate and pink are already at 0.956 or more. Adding them to training changes nothing (± 0.006). The robustness score goes from 0.872 to 0.95 without a single learned artefact. Only polarity is augmented and it counts in this gain.
 2. **Families barely transfer.** Transfer (without f − none) stays under +0.02 everywhere. It is even zero between close families like white and pink. Randomization protects **what it covers** and not a new artefact. It generalizes by coverage, not by principle.
 3. **Two orthogonal families are catastrophic if unseen.**
    - **Polarity**: without it obj F1 falls to 0.00 to 0.11 although the 8 other families are seen. The network learns the sign of the sticks and nothing else removes it.
@@ -198,7 +198,7 @@ The robustness score is the same quantity as in the top table, where the U-Net w
 
 **Consequence for a real chip.** What is not randomized is not learned. Three rules follow:
 
-- **impose by construction** the known invariances: polarity is fixed by the experimenter or always augmented, and spikes go through despiking and are seen in training;
+- **impose by construction** the known invariances: polarity is fixed by the experimenter or always augmented and spikes go through despiking and are seen in training;
 - **cover** every physically plausible family;
 - **keep a safeguard**: fall back to logistic regression when residual statistics leave the training domain, since the next unknown artefact will behave like polarity or spikes and not like drift.
 

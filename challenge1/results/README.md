@@ -2,7 +2,7 @@
 
 > Summary and commented figures: [`../README.md`](../README.md). There, **M5_min** is called "logistic regression" and **M2_matched** "matched filter".
 
-Five light detectors, CPU only, no torch, and their ablations. Code: [`challenge1/detection/baselines.py`](../detection/baselines.py).
+Five light detectors, CPU only, no torch and their ablations. Code: [`challenge1/detection/baselines.py`](../detection/baselines.py).
 
 ```bash
 uv run python -m detection.baselines                     # ~4 min (the first run builds the frozen sets, ~15 min, once)
@@ -14,7 +14,7 @@ uv run python -m detection.baselines --quick             # smoke test ~40 s
 ## What changed from v1
 
 v1 (commit `3ce2a04`) had three flaws:
-- its test set (seed 2025) was **looked at**, so it is burned;
+- its test set (seed 2025) was **looked at** so it is burned;
 - its threshold was chosen by tol-F1 alone;
 - its OOD set was only a slight added noise.
 
@@ -53,7 +53,7 @@ The full table is in [`baselines.md`](baselines.md). The same metrics with the t
 1. **In obj F1 the filters M1 to M4 are indistinguishable.** All sit around 0.865 and the CI of the difference with M2 contains 0. They find the same interdots. Only the width of their blobs differs: the width ratio goes from 2.9 to 7.5.
 2. **Dice mostly rewards copying the mask width.** M5_full has the best Dice (0.89, width ratio 0.95) yet collapses on stage 2 frames (0.33). Its high-pass is tuned to the simulator blur.
 3. **Choosing the threshold by Dice degrades detection.** Filter obj F1 falls from 0.86 to 0.49–0.75. Stage 2 falls under 0.12 for every method except M5_full (`fig3_metriques.png`). Dice must not be used as a selection criterion.
-4. **M5_min is best in obj F1 and tol F1, and could have been chosen without looking at the test.** It is also best on val (sel 0.933). It produces 0.28 false alarms per empty scene against 0 for the filters.
+4. **M5_min is best in obj F1 and tol F1 and could have been chosen without looking at the test.** It is also best on val (sel 0.933). It produces 0.28 false alarms per empty scene against 0 for the filters.
 5. **The real limit is transfer to stage 2.** A threshold learned on U(1, 33) no longer fits |i| ≈ 3. It must be recalibrated on stage 2 frames without using their labels, for example through the false-alarm rate on empty areas.
 
 ## Figures

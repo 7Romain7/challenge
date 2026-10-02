@@ -8,7 +8,7 @@ The code is [`baselines.py`](baselines.py). The deep models are in `models.py`, 
 
 An interdot is a thin dip (negative signal) on a background striped horizontally. The stripes follow the fast scan axis.
 
-1. Subtract the median of each row. Sticks cover few pixels, so the median estimates the row background.
+1. Subtract the median of each row. Sticks cover few pixels so the median estimates the row background.
 2. Flip the sign. The dip becomes a peak.
 3. Scale by median / MAD (factor 1.4826). The image is expressed in σ of the background noise. A classical z-score would be inflated by bright sticks and would erase the signal-to-noise ratio. A threshold can then be moved from one scene to another.
 
