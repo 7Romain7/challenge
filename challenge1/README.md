@@ -17,6 +17,24 @@ This document follows the order in which we actually worked. Each choice of metr
 
 The U-Net wins everywhere except two rows: false alarms and robustness to artefacts. Part 3 deals with the second one.
 
+### Leave-one-family-out (LOFO) at a glance
+
+Train on every artefact family except f, then score only on f (obj F1, mean over 3 levels, 1.9 M U-Net; 0.5 M gives the same picture). Full tables and analysis: [§ 3.3](#33-the-honest-test-leave-one-family-out) and [`results/lofo/lofo.md`](results/lofo/lofo.md).
+
+| held-out family f | none (no artefact seen) | **without f (f unknown)** | all (f seen, ceiling) |
+|---|---|---|---|
+| white | 0.915 | **0.935** | 0.945 |
+| pink | 0.958 | **0.956** | 0.956 |
+| drift | 0.976 | **0.976** | 0.974 |
+| jumps | 0.953 | **0.965** | 0.973 |
+| stripes | 0.976 | **0.976** | 0.974 |
+| lowpass | 0.960 | **0.964** | 0.976 |
+| saturate | 0.974 | **0.974** | 0.973 |
+| **spikes** | 0.705 | **0.777** | 0.972 |
+| **polarity** | 0.977 | **0.105** | 0.973 |
+
+Unseen families barely benefit from the others (transfer under +0.02). Two of them are catastrophic when unseen: polarity and spikes.
+
 ## Experimental setup
 
 The brief asks for a baseline on the default `csd/config.py`. It then allows documented and justified deviations. We followed it like this.
