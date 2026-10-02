@@ -133,3 +133,44 @@ class CoarseExploreROI(ROIBayesOpt):
             return
         self.focus = chosen[0]
         self._phase2(s, super(ROIBayesOpt, self).recommend(s))
+
+
+class CoarseRegionROI(CoarseExploreROI):
+    """Coarse survey scored per spatial group of interdots (one GP per group, max of UCB).
+
+    Combines the two diagnosis-driven ideas: more survey points (coarse frames) and no
+    masking of a second region by the brightest one (groups as in ``bo_region``)."""
+
+    name = "bo_coarse_region"
+
+    def __init__(self, *a, n_groups: int = 6, **kw) -> None:
+        super().__init__(*a, **kw)
+        self.n_groups = n_groups
+
+    def _coarse_next(self, s: Session) -> np.ndarray:
+        from .bo_region import kmeans
+        if len(self.cB) < 6 or len(s.ref) < 2:
+            return super()._coarse_next(s)
+        lab = kmeans(s.ref, self.n_groups, np.random.default_rng(0))
+        Ball = np.array(self.cB)
+        width = max(len(a) for a in self.cscore.A)  # the reference grows; older rows are shorter
+        fits = []
+        for j in np.unique(lab):
+            cols = np.flatnonzero(lab == j)
+            cols = cols[cols < width]
+            if len(cols) == 0:
+                continue
+            y, se = self.cscore.scores(cols=cols, min_visible=1)
+            m = np.isfinite(y)
+            if m.sum() >= 4 and np.ptp(y[m]) > 0:
+                fits.append(GP(rng=self.rng).fit(Ball[m], y[m], np.maximum(se[m], 1e-3)))
+        if not fits:
+            return super()._coarse_next(s)
+        mean_any = np.max([gp.predict(Ball)[0] for gp in fits], axis=0)
+        cand = self._candidates(s, Ball, mean_any)
+        if self.acq == "ucb":
+            acq = np.max([(lambda m, sd: m + 2.0 * sd)(*gp.predict(cand)) for gp in fits], axis=0)
+        else:
+            inc = float(mean_any.max())
+            acq = np.max([GP.expected_improvement(*gp.predict(cand), inc) for gp in fits], axis=0)
+        return cand[int(np.argmax(acq))]

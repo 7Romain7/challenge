@@ -1,0 +1,2 @@
+#!/bin/bash
+cd ~/c12_bench2; export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=challenge2:hackathon:challenge1 C12_DL_CKPT=$HOME/c12_bench2/ckpt/unet_lofo_u32_all.pt C12_DL_THR=0.5; R() { n=$1; shift; ~/c12/.venv/bin/python -m evaluation.run "$@" --workers 15 --out results/$n.jsonl > results/$n.log 2>&1; }; R creg_dev100 --methods bo_coarse_region_ucb_dlf --split dev --n 100; R creg_dev900 --methods bo_coarse_region_ucb_dlf --split dev --start 900 --n 100

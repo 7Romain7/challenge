@@ -14,7 +14,7 @@ from .pfn import PFNBayesOpt
 from .random_search import RandomSearch
 from .meta_acq import MetaAcqROI
 from .bo_region import RegionBO
-from .bo_coarse import CoarseExploreROI
+from .bo_coarse import CoarseExploreROI, CoarseRegionROI
 from .race import RaceCoarse, RaceROI
 from .classic import CMAESSearch, OfficialCoordAscent, ROICMAES, SPSAAdam
 
@@ -50,6 +50,10 @@ REGISTRY = {"random": RandomSearch, "bo": BayesOpt,
             # same methods with the training-free filter front-end (does the U-Net matter?)
             "bo_roi_auto_ucb": partial(ROIBayesOpt, switch="auto", acq="ucb"),
             "bo_coarse_ucb": partial(CoarseExploreROI, acq="ucb"),
+            # one native frame every 8 coarse ones instead of 4 (fine frames took ~45 % of pixels)
+            "bo_coarse_r8_ucb_dlf": partial(CoarseExploreROI, acq="ucb", ratio=8, session_cfg=SessionConfig(**_DL)),
+            "bo_coarse_region_ucb_dlf": partial(CoarseRegionROI, acq="ucb", session_cfg=SessionConfig(**_DL)),
+            "bo_coarse_region_ucb": partial(CoarseRegionROI, acq="ucb"),
             "bo_region_ucb_dlf": partial(RegionBO, acq="ucb", session_cfg=SessionConfig(**_DL)),
             "bo_coarse_ucb_dlf": partial(CoarseExploreROI, acq="ucb", session_cfg=SessionConfig(**_DL)),
             "bo_roi_lit_dlf": partial(ROIBayesOpt, lit_thr=1.0, session_cfg=SessionConfig(**_DL)),
