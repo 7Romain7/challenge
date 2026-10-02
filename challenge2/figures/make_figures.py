@@ -16,6 +16,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
+import matplotlib.ticker  # noqa: E402
 import numpy as np  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -73,32 +74,32 @@ def fig_metric():
     ax.plot(x, f, color=BLUE, lw=2)
     ax.axhline(fstar, color=INK2, lw=1, ls="--")
     ax.axhline(base, color=INK2, lw=1, ls=":")
-    ax.text(0.6, fstar + 0.6, "f* : meilleur contraste possible", ha="right", color=INK2)
-    ax.text(0.6, base + 0.6, "plancher (contraste sans résonance)", ha="right", color=INK2)
+    ax.text(0.6, fstar + 0.6, "f*: best achievable contrast", ha="right", color=INK2)
+    ax.text(0.6, base + 0.6, "floor (contrast off resonance)", ha="right", color=INK2)
     ax.plot([xb], [fb], "o", ms=9, color=ORANGE, mec=SURF, mew=2, zorder=5)
     ax.annotate("", xy=(xb + 0.02, fb), xytext=(xb + 0.02, fstar),
                 arrowprops=dict(arrowstyle="<->", color=ORANGE, lw=1.5))
     ax.annotate("", xy=(xb - 0.02, base), xytext=(xb - 0.02, fstar),
                 arrowprops=dict(arrowstyle="<->", color=INK2, lw=1.2))
-    ax.text(xb + 0.04, (fb + fstar) / 2, "f* − f(b̂)\n(ce qui manque)", color=ORANGE, va="center")
-    ax.text(xb - 0.04, (base + fstar) / 2 - 3, "f* − plancher\n(gain possible)", color=INK2, ha="right", va="center")
-    ax.text(xb + 0.16, fb - 5, "b̂ : point rendu\n(pic d'une autre région)", ha="left", color=ORANGE)
-    ax.set_xlabel("réglage des barrières (une dimension sur trois, schématique)")
-    ax.set_ylabel("contraste vrai f")
-    ax.set_title("Regret normalisé  R = (f* − f(b̂)) / (f* − plancher)   ·   ici R ≈ 0,12 : 88 % du gain récupéré")
+    ax.text(xb + 0.04, (fb + fstar) / 2, "f* − f(b̂)\n(what is missing)", color=ORANGE, va="center")
+    ax.text(xb - 0.04, (base + fstar) / 2 - 3, "f* − floor\n(achievable gain)", color=INK2, ha="right", va="center")
+    ax.text(xb + 0.16, fb - 5, "b̂: returned point\n(peak of another region)", ha="left", color=ORANGE)
+    ax.set_xlabel("barrier setting (one of three dimensions, schematic)")
+    ax.set_ylabel("true contrast f")
+    ax.set_title("Normalised regret  R = (f* − f(b̂)) / (f* − floor)   ·   here R ≈ 0.12: 88 % of the gain recovered")
     ax.set_ylim(0, fstar + 3)
     save(fig, "fig1_metrique.png")
 
 
 # ---------------------------------------------------------------- 2. ablation ladder
 LADDER = [
-    ("Montée par coordonnées\n(baseline officielle)", "classic_dev100", "coord_official"),
-    ("Recherche aléatoire", "random_dev100", "random_dlf"),
-    ("BO classique\n(GP + EI, frames entières)", "diag2_dev100", "bo_dlf"),
-    ("+ zooms ROI", "diag3_dev100", "bo_roi_dlf"),
-    ("+ budget réparti\npar le calcul", "auto_dev100", "bo_roi_auto_dlf"),
-    ("+ UCB au lieu d'EI", "ucb_dev100", "bo_roi_auto_ucb_dlf"),
-    ("+ course entre\ndeux régions", "race_roi_dev100", "bo_roi_race_dlf"),
+    ("Coordinate ascent\n(official baseline)", "classic_dev100", "coord_official"),
+    ("Random search", "random_dev100", "random_dlf"),
+    ("Plain BO\n(GP + EI, full frames)", "diag2_dev100", "bo_dlf"),
+    ("+ ROI zooms", "diag3_dev100", "bo_roi_dlf"),
+    ("+ computed\nbudget split", "auto_dev100", "bo_roi_auto_dlf"),
+    ("+ UCB instead of EI", "ucb_dev100", "bo_roi_auto_ucb_dlf"),
+    ("+ race between\ntwo regions", "race_roi_dev100", "bo_roi_race_dlf"),
 ]
 
 
@@ -111,25 +112,25 @@ def fig_ladder():
     fail = [100 * np.mean(R > 0.3) for _, R in rows]
     y = np.arange(len(rows))[::-1]
     fig, axs = plt.subplots(1, 3, figsize=(12, 4.6), sharey=True)
-    for ax, vals, col, title in ((axs[0], gain, BLUE, "Gain médian récupéré (1 − R)"),
-                                 (axs[1], succ, AQUA, "Succès : R ≤ 0,05"),
-                                 (axs[2], fail, ORANGE, "Ratés : R > 0,3  (plus bas = mieux)")):
+    for ax, vals, col, title in ((axs[0], gain, BLUE, "Median gain recovered (1 − R)"),
+                                 (axs[1], succ, AQUA, "Success: R ≤ 0.05"),
+                                 (axs[2], fail, ORANGE, "Failures: R > 0.3  (lower is better)")):
         ax.barh(y, vals, height=0.62, color=col, edgecolor=SURF, linewidth=2)
         for yi, v in zip(y, vals):
             ax.text(v + 1.5, yi, f"{v:.0f} %", va="center", color=INK, fontsize=9)
         ax.set_title(title)
         ax.set_xlim(0, 112)
         ax.grid(axis="y", visible=False)
-        ax.set_xlabel("% des 100 appareils (dev 0–99)" if ax is not axs[0] else "% (médiane sur 100 appareils)")
+        ax.set_xlabel("% of the 100 devices (dev 0–99)" if ax is not axs[0] else "% (median over 100 devices)")
     axs[0].set_yticks(y)
     axs[0].set_yticklabels(labels)
-    fig.suptitle("Chaque brique ajoutée, même budget (1 M px, 300 mesures), mêmes 100 appareils", fontweight="bold")
+    fig.suptitle("Each added component, same budget (1 M px, 300 measurements), same 100 devices", fontweight="bold")
     fig.tight_layout()
     save(fig, "fig2_progression.png")
 
 
 # ---------------------------------------------------------------- 3. val distribution
-VAL = [("bo_roi_dlf (avant)", "night_val200x3", "bo_roi_dlf", INK2),
+VAL = [("bo_roi_dlf (before)", "night_val200x3", "bo_roi_dlf", INK2),
        ("bo_roi_auto_ucb_dlf", "val_ucb", "bo_roi_auto_ucb_dlf", BLUE),
        ("bo_coarse_ucb_dlf", "val_coarseucb", "bo_coarse_ucb_dlf", ORANGE),
        ("bo_roi_race_dlf", "val_race", "bo_roi_race_dlf", AQUA)]
@@ -143,19 +144,20 @@ def fig_val():
             continue
         R = np.sort(runs_R(rows))
         ax.step(R, np.arange(1, len(R) + 1) / len(R) * 100, where="post", color=col, lw=2,
-                label=f"{lab}  (médiane {np.median(R):.3f})")
+                label=f"{lab}  (median {np.median(R):.3f})")
     ax.axvline(0.05, color=INK2, lw=1, ls="--")
     ax.axvline(0.3, color=INK2, lw=1, ls=":")
-    ax.text(0.055, 3, "succès ≤ 0,05", color=INK2, fontsize=9)
-    ax.text(0.305, 3, "raté > 0,3", color=INK2, fontsize=9)
+    ax.text(0.052, 101, "success ≤ 0.05", color=INK2, fontsize=9, va="bottom")
+    ax.text(0.305, 101, "failure > 0.3", color=INK2, fontsize=9, va="bottom")
     ax.set_xscale("symlog", linthresh=0.05)
     ax.set_xlim(0, 1)
     ax.set_xticks([0, 0.02, 0.05, 0.1, 0.2, 0.3, 0.5, 1])
-    ax.set_xticklabels(["0", "0,02", "0,05", "0,1", "0,2", "0,3", "0,5", "1"])
-    ax.set_xlabel("regret R du point rendu (0 = optimum)")
-    ax.set_ylabel("% des runs avec un regret ≤ R")
-    ax.set_title("Val : 200 appareils jamais vus × 3 graines (600 runs par méthode)")
-    ax.legend(loc="lower right")
+    ax.set_xticklabels(["0", "0.02", "0.05", "0.1", "0.2", "0.3", "0.5", "1"])
+    ax.set_xlabel("regret R of the returned point (0 = optimum)")
+    ax.set_ylabel("% of runs with regret ≤ R")
+    ax.set_title("Val: 200 unseen devices × 3 seeds (600 runs per method)")
+    ax.set_ylim(0, 108)
+    ax.legend(loc="upper left", fontsize=9)
     save(fig, "fig3_val_distribution.png")
 
 
@@ -164,7 +166,7 @@ def fig_budget():
     budgets = [250_000, 500_000, 1_000_000, 2_000_000, 4_000_000]
     fig, axs = plt.subplots(1, 2, figsize=(11, 4))
     for tag, ref1, m, col, lab in (("ucb", "ucb_dev100", "bo_roi_auto_ucb_dlf", BLUE, "BO + zooms + UCB"),
-                                   ("coarse", "coarseucb_dev100", "bo_coarse_ucb_dlf", ORANGE, "exploration grossière + UCB")):
+                                   ("coarse", "coarseucb_dev100", "bo_coarse_ucb_dlf", ORANGE, "coarse exploration + UCB")):
         g, s = [], []
         for b in budgets:
             R = runs_R(load(ref1 if b == 1_000_000 else f"curve_{tag}_{b}", m))
@@ -173,31 +175,32 @@ def fig_budget():
         x = np.array(budgets) / 1e6
         axs[0].plot(x, g, "o-", color=col, lw=2, ms=8, mec=SURF, mew=2, label=lab)
         axs[1].plot(x, s, "o-", color=col, lw=2, ms=8, mec=SURF, mew=2, label=lab)
-    for ax, t, yl in ((axs[0], "Gain médian récupéré", "1 − R médian (%)"),
-                      (axs[1], "Succès (R ≤ 0,05)", "% des 100 appareils")):
+    for ax, t, yl in ((axs[0], "Median gain recovered", "median 1 − R (%)"),
+                      (axs[1], "Success (R ≤ 0.05)", "% of the 100 devices")):
         ax.set_xscale("log")
+        ax.xaxis.set_minor_locator(matplotlib.ticker.NullLocator())
         ax.set_xticks(np.array(budgets) / 1e6)
-        ax.set_xticklabels(["0,25 M\n75 mes.", "0,5 M\n150", "1 M\n300", "2 M\n600", "4 M\n1 200"])
+        ax.set_xticklabels(["0.25 M\n75 meas.", "0.5 M\n150", "1 M\n300", "2 M\n600", "4 M\n1,200"])
         ax.axvline(1, color=INK2, lw=1, ls="--")
         ax.set_title(t)
         ax.set_ylabel(yl)
-        ax.set_xlabel("budget : pixels et mesures augmentés ensemble")
+        ax.set_xlabel("budget: pixels and measurements scaled together")
         ax.set_ylim(0, 100)
-    axs[0].text(1.05, 8, "budget de référence", color=INK2, fontsize=9)
+    axs[0].text(1.05, 8, "reference budget", color=INK2, fontsize=9)
     axs[1].legend(loc="upper left")
-    fig.suptitle("Plus de budget aide peu au-delà de 1 M px (dev 0–99)", fontweight="bold")
+    fig.suptitle("More budget helps little beyond 1 M px (dev 0–99)", fontweight="bold")
     fig.tight_layout()
     save(fig, "fig4_budget.png")
 
 
 # ---------------------------------------------------------------- 5. robustness
-SHIFTS = [("S1", "bruit ×2"), ("S2", "stries ×3"), ("S3", "optimum plus loin"), ("S4a", "2 régions"),
-          ("S4b", "8 régions"), ("S5a", "pics étroits ×0,5"), ("S5b", "pics larges ×2"),
-          ("S6", "dérive très non linéaire"), ("S7", "contraste faible")]
+SHIFTS = [("S1", "noise ×2"), ("S2", "stripes ×3"), ("S3", "optimum further away"), ("S4a", "2 regions"),
+          ("S4b", "8 regions"), ("S5a", "narrow peaks ×0.5"), ("S5b", "wide peaks ×2"),
+          ("S6", "strongly non-linear drift"), ("S7", "weak contrast")]
 
 
 def fig_robust():
-    meths = [("bo_roi_dlf\n(avant)", "rob", "bo_roi_dlf"), ("bo_roi_auto_ucb_dlf", "rob", "bo_roi_auto_ucb_dlf"),
+    meths = [("bo_roi_dlf\n(before)", "rob", "bo_roi_dlf"), ("bo_roi_auto_ucb_dlf", "rob", "bo_roi_auto_ucb_dlf"),
              ("bo_coarse_ucb_dlf", "robc", "bo_coarse_ucb_dlf")]
     M = np.array([[np.median(runs_R(load(f"{p}_{s}", m))) for _, p, m in meths] for s, _ in SHIFTS])
     fig, ax = plt.subplots(figsize=(7.6, 5.2))
@@ -215,8 +218,8 @@ def fig_robust():
     ax.set_yticklabels([f"{s} · {d}" for s, d in SHIFTS])
     ax.grid(False)
     cb = fig.colorbar(im, ax=ax, fraction=0.04)
-    cb.set_label("regret médian R (plus clair = mieux)")
-    ax.set_title("Robustesse : simulateur modifié, 50 appareils par case\n(★ = meilleure méthode de la ligne)")
+    cb.set_label("median regret R (lighter = better)")
+    ax.set_title("Robustness: modified simulator, 50 devices per cell\n(★ = best method of the row)")
     save(fig, "fig5_robustesse.png")
 
 
@@ -258,8 +261,8 @@ def fig_example(seed: int = 3):
     origin = flit["centre"] - flit["span"] / 2
     pos = (s.ref[m.focus] + s.drift.predict(flit["b"] - s.b0) - origin) / s.step  # (x=col, y=row)
     n = round(m.patch / s.step)
-    for k, (img, title) in enumerate(((img0, "1. Frame de référence (barrières à 0)\ninterdots repérés par la perception"),
-                                       (imgl, f"2. Meilleure frame trouvée : une région s'allume\n(contraste ×{fvals[j_lit] / base:.0f}) ; carrés = zooms ROI"))):
+    for k, (img, title) in enumerate(((img0, "1. Reference frame (barriers at 0)\ninterdots found by the perception"),
+                                       (imgl, f"2. Best frame found: a region lights up\n(contrast ×{fvals[j_lit] / base:.0f}); squares = ROI zooms"))):
         ax = fig.add_subplot(gs[0, k])
         img = img - np.median(img, axis=1, keepdims=True)
         ax.imshow(img, cmap="gray_r" if s.percep.polarity < 0 else "gray", origin="lower")
@@ -287,33 +290,33 @@ def fig_example(seed: int = 3):
             sp.set_color(AQUA)
             sp.set_linewidth(2)
         if i == 1:
-            ax.set_title("3. Les 3 zooms ROI (25×25 px)", fontsize=10)
+            ax.set_title("3. The 3 ROI zooms (25×25 px)", fontsize=10)
     ax = fig.add_subplot(sub[1, :])
     ax.axis("off")
     ax.text(0.0, 0.95,
-            f"{len(fr)} frames entières (150×150 px), puis\n{len(m.Y2)} réglages testés en zooms\n"
-            f"(3 patchs = 12× moins cher qu'une frame)\n"
-            f"budget : {res['n_pixels'] / 1e6:.2f} M px, {res['n_meas']} mesures\n"
-            f"regret final R = {(fs - truth.true_factor(exp, s.reco_log[-1]['wp'])) / (fs - base):.3f}",
+            f"{len(fr)} full frames (150×150 px), then\n{len(m.Y2)} settings tested with zooms\n"
+            f"(3 patches = 12× cheaper than a frame)\n"
+            f"budget: {res['n_pixels'] / 1e6:.2f} M px, {res['n_meas']} measurements\n"
+            f"final regret R = {(fs - truth.true_factor(exp, s.reco_log[-1]['wp'])) / (fs - base):.3f}",
             fontsize=9.5, transform=ax.transAxes, va="top")
     # trajectory in barrier space (g1, g3) with region centres
     ax = fig.add_subplot(gs[1, :2])
     live = sorted(set(int(k) for k in sim._region_of))
     best = max(live, key=lambda k: sim.contrast_model.regions[k].amplitude)
     ax.scatter(B[:, 0], B[:, 1], c=np.arange(len(B)), cmap="Blues", s=45, edgecolors=INK2, linewidths=0.5,
-               vmin=-5, label="frames entières (clair → foncé : ordre)", zorder=3)
+               vmin=-5, label="full frames (light → dark: order)", zorder=3)
     roi = np.array(m.X2) if len(m.X2) else np.zeros((0, 3))
     if len(roi):
-        ax.scatter(roi[:, 0], roi[:, 1], s=10, color=ORANGE, alpha=0.6, label="réglages testés en zoom", zorder=4)
+        ax.scatter(roi[:, 0], roi[:, 1], s=10, color=ORANGE, alpha=0.6, label="settings tested with zooms", zorder=4)
     for k in live:
         c = sim.contrast_model.regions[k].center
         ax.scatter([c[0]], [c[1]], marker="*", s=380 if k == best else 200,
                    color=AQUA if k == best else INK2, edgecolors=SURF, linewidths=1.5, zorder=5)
-    ax.scatter([], [], marker="*", s=200, color=AQUA, label="pic de la meilleure région (vérité, pour la figure)")
-    ax.scatter([], [], marker="*", s=120, color=INK2, label="pics des autres régions")
+    ax.scatter([], [], marker="*", s=200, color=AQUA, label="peak of the best region (truth, figure only)")
+    ax.scatter([], [], marker="*", s=120, color=INK2, label="peaks of the other regions")
     ax.set_xlabel("g1 (V)")
     ax.set_ylabel("g3 (V)")
-    ax.set_title("4. Trajectoire dans l'espace des barrières (projection g1–g3)")
+    ax.set_title("4. Trajectory in barrier space (g1–g3 projection)")
     ax.legend(loc="center left", bbox_to_anchor=(1.01, 0.5), fontsize=9)
     ax.set_aspect("equal")
     # anytime regret
@@ -321,11 +324,11 @@ def fig_example(seed: int = 3):
     px = [r["pixels"] / 1e6 for r in s.reco_log]
     R = [(fs - truth.true_factor(exp, r["wp"])) / (fs - base) for r in s.reco_log]
     ax.step(px, R, where="post", color=BLUE, lw=2)
-    ax.set_xlabel("pixels dépensés (M)")
-    ax.set_ylabel("regret R du point recommandé")
+    ax.set_xlabel("pixels spent (M)")
+    ax.set_ylabel("regret R of the recommended point")
     ax.set_ylim(-0.02, 1.02)
-    ax.set_title("5. Regret au fil du run")
-    fig.suptitle(f"Un run complet sur l'appareil dev {seed}", fontweight="bold")
+    ax.set_title("5. Regret along the run")
+    fig.suptitle(f"One complete run on device dev {seed}", fontweight="bold")
     fig.tight_layout()
     save(fig, "fig6_exemple_run.png")
 
@@ -337,11 +340,11 @@ def fig_diag():
     Rr = np.array([r["R_region"] for r in rows])
     lit = np.array([r["best_lit_max"] for r in rows])
     bad = Rr > 0.05
-    cats = [("succès\nR ≤ 0,05", np.sum(R <= 0.05), AQUA),
-            ("perte par le choix de région\nmeilleure région jamais allumée (< 10 %)", np.sum(bad & (lit < 0.1)), ORANGE),
-            ("perte par le choix de région\nallumée 10–20 %", np.sum(bad & (lit >= 0.1) & (lit < 0.2)), YELLOW),
-            ("perte par le choix de région\nallumée ≥ 20 % mais pas suivie", np.sum(bad & (lit >= 0.2)), MAGENTA),
-            ("bonne région,\naffinage incomplet", np.sum(~bad & (R > 0.05)), BLUE)]
+    cats = [("success\nR ≤ 0.05", np.sum(R <= 0.05), AQUA),
+            ("lost by the region choice\nbest region never lit (< 10 %)", np.sum(bad & (lit < 0.1)), ORANGE),
+            ("lost by the region choice\nlit 10–20 %", np.sum(bad & (lit >= 0.1) & (lit < 0.2)), YELLOW),
+            ("lost by the region choice\nlit ≥ 20 % but not followed", np.sum(bad & (lit >= 0.2)), MAGENTA),
+            ("right region,\nincomplete refinement", np.sum(~bad & (R > 0.05)), BLUE)]
     fig, ax = plt.subplots(figsize=(8.5, 3.8))
     y = np.arange(len(cats))[::-1]
     ax.barh(y, [c[1] for c in cats], color=[c[2] for c in cats], height=0.6, edgecolor=SURF, linewidth=2)
@@ -350,8 +353,8 @@ def fig_diag():
     ax.set_yticks(y)
     ax.set_yticklabels([c[0] for c in cats], fontsize=9)
     ax.grid(axis="y", visible=False)
-    ax.set_xlabel("nombre d'appareils sur 100 (bo_roi_dlf, dev 0–99)")
-    ax.set_title("D'où viennent les échecs : surtout de l'exploration")
+    ax.set_xlabel("number of devices out of 100 (bo_roi_dlf, dev 0–99)")
+    ax.set_title("Where failures come from: mostly exploration")
     save(fig, "fig7_diagnostic.png")
 
 

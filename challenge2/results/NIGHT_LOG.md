@@ -1,44 +1,42 @@
-# Journal de la nuit (challenge 2) — toutes les tentatives, y compris les échecs
+# Improvement log (challenge 2): every attempt, failures included
 
-Règles fixées avant la boucle : idée tirée du diagnostic, paramètres fixés a priori (aucun balayage) ;
-criblage dev 0–99 (apparié contre `bo_roi_dlf`) ; confirmation sur appareils neufs dev 900–999 ;
-Holm sur l'ensemble des tentatives ; gagnant final : val 1000–1199 × 3 graines + configurations décalées S1–S7.
-Test 10000–10199 intact.
+Rules fixed before the loop started: each idea comes from a measured diagnosis; its parameters are fixed in advance (no sweep); screening on dev 0–99 (paired against `bo_roi_dlf`); confirmation on fresh devices dev 900–999; Holm correction over all attempts; final candidates on val 1000–1199 × 3 seeds and on the shifted configurations S1–S7. Test 10000–10199 untouched.
 
-| # | idée (hypothèse) | dev 0–99 R@1M | succès | ΔR vs bo_roi_dlf [IC] | décision |
-|---|---|---|---|---|---|
-| 0 | `bo_roi_dlf` (référence) | 0,133 | 25 % | — | — |
-| 1 | CMA-ES plein cadre (le GP sert-il ?) | 0,605 | 2 % | +0,37 [0,29 ; 0,48] | rejeté |
-| 2 | SPSA + Adam (B3) | 0,442 | 3 % | +0,19 [0,13 ; 0,34] | rejeté |
-| 3 | montée par coordonnées officielle (B1) | 0,977 | 0 % | +0,80 | baseline |
-| 4 | CMA-ES en phase ROI (le GP sert-il en phase 2 ?) | 0,157 | 26 % | −0,003 [−0,012 ; 0,002] | équivalent → GP pas le goulot |
-| 5 | bascule ROI adaptative (« rien d'allumé ») | 0,133 | 25 % | 0 | rejeté : le bruit au plancher atteint y−se ≈ 1,8 |
-| 6 | acquisition méta-apprise, gén. 25 (récompense observable) | 0,115 | 29 % | −0,015 [−0,033 ; −0,003], p = 0,15 | à confirmer (entraînement en cours) |
-| 7 | recherche aléatoire (témoin d'exploration) | 0,683 | 1 % | — | la BO explore déjà 3× mieux (meilleure région vue 32 % vs 9 %) |
-| 8 | budget 2 M / 4 M (limite d'échantillons ?) | 0,129 / 0,094 | 28 % / 36 % | — | ×4 de budget → 36 % seulement : il faut localiser plusieurs pics, donc beaucoup plus de points d'exploration |
-| 9 | partage des phases **calculé** depuis les deux plafonds (bo_roi laissait 37 % des pixels) | 0,102 | 29 % | −0,007 [−0,022 ; −0,002], p = 0,10 | gardé comme base |
-| 10 | 9 + **UCB** (√β = 2, fixé a priori) en phase 1 | **0,094** | **37 %** | **−0,022 [−0,038 ; −0,007], p = 0,002 (Holm 0,005)** | **à confirmer sur dev 900–999** |
-| 11 | 9 + moitié de la phase 1 en remplissage d'espace (maximin) | 0,091 | 32 % | −0,009 [−0,037 ; 0,007], p = 0,11 | non significatif |
-| — | diagnostic : sur 47 appareils perdant > 5 % par le choix de région, 26 n'ont jamais allumé la meilleure région à 10 % (couverture), 11 l'ont allumée à ≥ 20 % sans la suivre (information perdue par le max) | | | | → pistes 12 (modèle par région) et 13 (exploration grossière ×2) |
-| 12 | modèle par région (GP par groupe k-means k = 6, max d'EI) + partage calculé | en cours | | | |
-| 13 | exploration grossière ×2 (≈ 80 frames grossières + 20 fines) + partage calculé | en cours | | | |
+**Decision rule, written before seeing the results**: the retained candidate is the best paired ΔR on dev 900–999 among the methods significant on dev 0–99; val (3 seeds, Holm over all methods) is reported for every candidate without re-selection; the test split is run once, after agreement.
 
-## Files autonomes lancées à 23 h 40 (scripts `evaluation/q_<machine>.sh`, sorties dans `~/c12_bench2/results/`)
-- dindon : `bo_region_ucb_dlf` dev 0–99 puis dev 900–999 · jabiru : `bo_coarse_ucb_dlf` dev 0–99 et 900–999, `bo_coarse_dlf` dev 900–999
-- kamiche : confirmation `bo_roi_auto_ucb_dlf` + `bo_roi_dlf` dev 900–999, puis val × 3 graines de `bo_roi_auto_ucb_dlf`
-- perdrix / ombrette : val × 3 de `bo_region_ucb_dlf` / `bo_coarse_ucb_dlf` · gelinotte : méta final dev 0–99 + val × 3 `bo_roi_meta_dlf` et **`bo_roi_dlf` (référence val)**
-- linotte / nandou : robustesse S1–S7 (dev 0–49) de `bo_roi_dlf` vs `bo_roi_auto_ucb_dlf` ; nandou : `bo_region_dlf` dev 900–999
+## Attempts
 
-**Règle de décision fixée avant de voir les résultats** : candidat retenu = meilleur ΔR apparié sur **dev 900–999** (appareils neufs) parmi ceux significatifs sur dev 0–99 ;
-la val (3 graines, Holm sur toutes les méthodes) est rapportée pour tous, sans re-sélection ; test lu une seule fois après accord.
+R = median regret at 1 M pixels, success = share of runs with R ≤ 0.05, ΔR = paired median difference against `bo_roi_dlf` with 95 % bootstrap CI.
 
-## Résultats intermédiaires (00 h 45)
-dev 0–99 (ΔR vs bo_roi_dlf, p Holm) : roi_auto_ucb −0,022 (0,011) · region_ucb −0,020 (0,016) · méta finale −0,019 (0,016) · coarse −0,015 (0,21) · coarse_ucb −0,011 (0,21) · region −0,012 (0,21)
-dev 900–999, appareils neufs (ΔR, p Holm) : **coarse_ucb −0,046 (4e-7), R 0,064, succès 43 %** · coarse −0,037 (7e-4) · region_ucb −0,019 (0,015) · region −0,018 (0,015) · roi_auto_ucb −0,016 (4e-4, succès 39 %) ; référence bo_roi_dlf R 0,164, succès 22 %
-Lecture : le gain UCB se confirme sur appareils neufs ; coarse_ucb est la meilleure sur 900–999 mais n'était pas significative sur 0–99 → la val (3 graines) tranche.
+| # | idea (hypothesis) | dev 0–99: R / success | ΔR [CI], p | decision |
+|---|---|---|---|---|
+| 0 | `bo_roi_dlf` (reference) | 0.133 / 25 % | | |
+| 1 | CMA-ES on full frames (does the GP matter?) | 0.605 / 2 % | +0.37 [0.29, 0.48] | rejected |
+| 2 | SPSA + Adam (baseline B3) | 0.442 / 3 % | +0.19 [0.13, 0.34] | rejected |
+| 3 | official coordinate ascent (baseline B1) | 0.977 / 0 % | +0.80 | baseline |
+| 4 | CMA-ES in the ROI phase (does the GP matter in phase 2?) | 0.157 / 26 % | −0.003 [−0.012, 0.002] | equivalent: the GP is not the bottleneck |
+| 5 | adaptive switch to ROI ("nothing lit yet") | 0.133 / 25 % | 0 | rejected: floor noise already reaches y − se ≈ 1.8 |
+| 6 | meta-learned acquisition, generation 25 (observable reward) | 0.115 / 29 % | −0.015 [−0.033, −0.003], p = 0.15 | trained to the end, see #18 |
+| 7 | random search (exploration control) | 0.683 / 1 % | | BO already explores 3× better (best region seen 32 % vs 9 %) |
+| 8 | budget 2 M / 4 M pixels at 300 measurements (sample limit?) | 0.129 / 28 %, 0.094 / 36 % | | the measurement cap binds; see #14 for the real budget curve |
+| 9 | phase split **computed** from both caps (`bo_roi` left 37 % of the pixels unspent) | 0.102 / 29 % | −0.007 [−0.022, −0.002], p = 0.10 | kept as the base |
+| 10 | 9 + **UCB** (√β = 2, fixed in advance) in phase 1 | **0.094 / 37 %** | **−0.022 [−0.038, −0.007], Holm p 0.005** | confirmed on dev 900–999 and val: **retained** |
+| 11 | 9 + half of phase 1 space-filling (maximin) | 0.091 / 32 % | −0.009 [−0.037, 0.007], p = 0.11 | not significant |
+| diag | on 47 devices losing > 5 % through the region choice, 26 never lit the best region to 10 % (coverage) and 11 lit it to ≥ 20 % without following it (information lost by the max) | | | leads to #12 and #13 |
+| 12 | per-region model (one GP per k-means group, k = 6) + computed split, with UCB | 0.083 / 34 % | −0.020 [−0.040, −0.004], Holm p 0.016 | dev 900–999: 0.133 / 30 %; val: no better than #10 |
+| 13 | coarse exploration (2× step, ≈ 80 coarse + 20 native frames), with UCB | 0.128 / 27 % | −0.011 [−0.056, 0.010], p = 0.11 | dev 900–999: best (0.064 / 43 %); val −0.037; collapses under S1 and S5a: not retained |
+| 14 | budget curve, pixels **and** measurements scaled together (250 k / 75 … 4 M / 1,200) | 0.678 → 0.068 | | plateau after 1 M pixels (README, section 5) |
+| 15 | U-Net vs filter inside the best methods | | | stopped: not needed for the decision |
+| 16 | robustness S1–S7 of #13 | | | fragile to doubled noise and narrow peaks |
+| 17 | **race between two regions** in the ROI phase (targets the 11 "lit but not chosen" devices) | 0.099 / 38 % | −0.017 [−0.033, −0.009], Holm p 0.0008 | selected by the rule (dev 900–999 ΔR −0.032), identical to #10 on val (ΔR +0.001, p = 0.94): not kept |
+| 18 | meta-learned acquisition, final (218 generations, ~31,000 episodes) | 0.105 / 26 % | −0.019 [−0.026, −0.006], Holm p 0.016 | val: +0.003, p = 0.43, does not transfer |
+| 19 | #13 with one native frame every 8 coarse frames instead of 4 | 0.093 / 32 % | −0.016, Holm p 0.10 | dev 900–999 0.129 / 27 %: rejected |
+| 20 | #13 + per-region model during the coarse survey | 0.092 / 34 % | −0.019, Holm p 0.015 | dev 900–999 0.102 / 25 %: rejected |
 
-## Deuxième vague (00 h 50)
-| 14 | courbe de budget, pixels **et** mesures ensemble (250 k/75 … 4 M/1 200), roi_auto_ucb et coarse_ucb | | | | en cours |
-| 15 | U-Net vs filtre dans les deux meilleures méthodes (dev 0–99, 900–999, S1/S5a/S7) | | | | en cours |
-| 16 | robustesse S1–S7 de coarse_ucb | | | | en cours |
-| 17 | **course entre deux régions** en phase ROI (vise les 11 cas « vue mais pas choisie ») ; retenue seulement si significative sur dev 0–99 **et** 900–999 | | | | en cours |
+## Final decision
+
+The rule pointed to #17. On val it is indistinguishable from #10, which is simpler and the only one whose robustness was measured, so **#10, `bo_roi_auto_ucb_dlf`, is the retained method**. Val (600 runs): median regret 0.112 against 0.150, success 28 % against 22 %, failures 12 % against 22 %, paired ΔR −0.018 [−0.038, −0.010], Holm p 3·10⁻⁷.
+
+## Where the runs were executed
+
+Idle machines of the school cluster, one queue per machine (scripts `evaluation/q*_<machine>.sh`), outputs in `~/c12_bench2/results/` and copied to this folder.
