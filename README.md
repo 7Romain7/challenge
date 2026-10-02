@@ -26,37 +26,18 @@ Three steps, each motivated by the limit of the previous one:
 2. **U-Net** on an infinite generator: much better but it collapses on artefacts it has never seen.
 3. **U-Net + artefact families**, tested with **leave-one-family-out** (LOFO): train without one family, then test on it. Randomization protects what it covers, not a new artefact.
 
-| test, 400 scenes | Logistic regression | U-Net (lowsnr) |
-|---|---|---|
-| obj F1 (interdots found) | 0.924 | **0.979** |
-| challenge 2 frames (obj F1) | 0.62 | **0.96** |
-| robustness to artefacts (1 = insensitive) | **0.935** | 0.872 |
+### Comparison of the four detectors
 
-### LOFO results
+| | Matched filter | Logistic regression | U-Net (lowsnr) | U-Net LOFO |
+|---|---|---|---|---|
+| obj F1, test 400 scenes | 0.863 | 0.924 | **0.979** | 0.975 |
+| obj F1 on challenge 2 frames | 0.14 | 0.62 | **0.96** | not measured |
+| robustness score (1 = insensitive) | 0.934 | 0.935 | 0.872 | 0.930 |
+| robustness score without polarity | 0.959 | 0.936 | 0.892 | **0.964** |
+| mean obj F1 over 25 perturbed sets | 0.801 | 0.861 | 0.855 | **0.907** |
+| worst of the 25 sets | 0.294 | **0.533** | 0.134 | 0.105 |
 
-obj F1 on the held-out family, mean over its 3 severity levels. `none` = no artefact seen in training (physical preprocessing only). **`without f`** = all families but f (f is unknown). `all` = every family (ceiling, not a robustness measurement). One seed per run. Full table: [challenge1/results/lofo/lofo.md](challenge1/results/lofo/lofo.md).
-
-| held-out family f | none 0.5 M | **without f 0.5 M** | all 0.5 M | none 1.9 M | **without f 1.9 M** | all 1.9 M |
-|---|---|---|---|---|---|---|
-| white | 0.933 | **0.940** | 0.945 | 0.915 | **0.935** | 0.945 |
-| pink | 0.956 | **0.956** | 0.957 | 0.958 | **0.956** | 0.956 |
-| drift | 0.977 | **0.972** | 0.973 | 0.976 | **0.976** | 0.974 |
-| jumps | 0.958 | **0.964** | 0.971 | 0.953 | **0.965** | 0.973 |
-| stripes | 0.977 | **0.975** | 0.973 | 0.976 | **0.976** | 0.974 |
-| lowpass | 0.969 | **0.965** | 0.975 | 0.960 | **0.964** | 0.976 |
-| saturate | 0.974 | **0.974** | 0.972 | 0.974 | **0.974** | 0.973 |
-| **spikes** | 0.706 | **0.720** | 0.970 | 0.705 | **0.777** | 0.972 |
-| **polarity** | 0.978 | **0.001** | 0.972 | 0.977 | **0.105** | 0.973 |
-| clean test | 0.976 | 0.972 to 0.976 | 0.973 | 0.976 | 0.974 to 0.978 | 0.974 |
-| robustness score (25 sets) | 0.955 | n/a | 0.994 | 0.952 | n/a | 0.994 |
-
-What it says:
-
-- Physical preprocessing (`PhysInput`) does most of the work: robustness goes from 0.872 to 0.95 with no artefact learned.
-- Families barely transfer (gain under +0.02 everywhere). Randomization generalizes by coverage, not by principle.
-- Two families are catastrophic when unseen: **polarity** (obj F1 down to 0.00 to 0.11) and **spikes** (0.72 to 0.78 against 0.97 when seen).
-- Capacity barely matters: the 0.5 M and 1.9 M U-Nets score the same on the clean test (0.973 / 0.974). The larger one resists spikes slightly better (0.78 against 0.72), not established with one seed.
-- Randomizing the 8 families costs 0.003 obj F1 on the clean test.
+*U-Net LOFO*: `PhysInput` preprocessing plus 8 randomized artefact families, trained 9 times with one family removed. Each perturbed set is scored by the model that never saw its family. Criteria definitions, per-family results and analysis: [challenge1/README.md](challenge1/README.md) and [challenge1/results/lofo/lofo.md](challenge1/results/lofo/lofo.md).
 
 ## Challenge 2: optimization → [challenge2/README.md](challenge2/README.md)
 

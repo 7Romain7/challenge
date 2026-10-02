@@ -6,34 +6,40 @@ This document follows the order in which we actually worked. Each choice of metr
 
 ## Results
 
-| | Matched filter | Logistic regression | U-Net (lowsnr) |
-|---|---|---|---|
-| obj F1 (test, 400 scenes) | 0.863 | 0.924 | **0.979** |
-| tol F1 (pixel ±1 px) | 0.868 | 0.954 | **0.989** |
-| obj F1 on challenge 2 frames | 0.14 | 0.62 | **0.96** |
-| false alarms per empty scene | **0** | 0.28 | 1.61 |
-| robustness to artefacts (1 = insensitive) | 0.934 | **0.935** | 0.872 |
-| learned parameters | 1 threshold | 3 weights + 1 threshold | 1.9 M |
+| | Matched filter | Logistic regression | U-Net (lowsnr) | U-Net LOFO |
+|---|---|---|---|---|
+| **Detection quality** (official generator, test, 400 scenes) | | | | |
+| obj F1 (interdots found) | 0.863 | 0.924 | **0.979** | 0.975 |
+| tol F1 (trace within ±1 px) | 0.868 | 0.954 | **0.989** | 0.986 |
+| obj F1 on challenge 2 frames | 0.14 | 0.62 | **0.96** | not measured |
+| false alarms per empty scene | **0** | 0.28 | 1.61 | not measured |
+| learned parameters | 1 threshold | 3 weights + 1 threshold | 1.9 M | 1.9 M |
+| **Robustness** (200 test scenes, 25 perturbed sets) | | | | |
+| obj F1, clean 200 scenes | 0.857 | 0.921 | **0.980** | 0.975 |
+| **robustness score** (mean obj F1 perturbed / clean; 1 = insensitive) | 0.934 | 0.935 | 0.872 | 0.930 |
+| robustness score without polarity (24 sets) | 0.959 | 0.936 | 0.892 | **0.964** |
+| mean obj F1 over the 25 sets | 0.801 | 0.861 | 0.855 | **0.907** |
+| white noise ×2 | 0.727 | 0.850 | 0.597 | **0.905** |
+| spikes 2 % of pixels | **0.812** | 0.533 | 0.134 | 0.526 |
+| polarity inverted | 0.294 | **0.836** | 0.376 | 0.105 |
+| worst of the 25 sets | 0.294 (polarity) | **0.533** (spikes 2 %) | 0.134 (spikes 2 %) | 0.105 (polarity) |
+| sets losing more than 10 % of clean obj F1 | 4 / 25 | 4 / 25 | 5 / 25 | **3 / 25** |
 
-The U-Net wins everywhere except two rows: false alarms and robustness to artefacts. Part 3 deals with the second one.
+**Columns.** *U-Net (lowsnr)* is the plain U-Net trained on clean simulator data with a log-uniform intensity law. *U-Net LOFO* is the final recipe: `PhysInput` preprocessing plus a generator that randomizes 8 artefact families, trained 9 times, each time with one family removed. Every perturbed set is scored by the model that **never saw its family**. Nothing is therefore tuned to the sets it is graded on.
 
-### Leave-one-family-out (LOFO) at a glance
+**Robustness criteria.**
+- *Robustness score*: for each of the 25 perturbed sets (9 families × up to 3 severity levels), obj F1 on the perturbed images divided by obj F1 on the same images clean, averaged. It measures the relative loss and ignores absolute quality.
+- *Without polarity*: same score on the 24 other sets. Polarity is a physical convention fixed by the experimenter, so it is the one family that is legitimately imposed by construction.
+- *Mean obj F1*: absolute quality averaged over the 25 sets. It separates a robust but mediocre detector (matched filter) from a robust and accurate one.
+- *Worst set* and *sets losing more than 10 %*: the tail. A detector used on a real chip fails on its worst case, not on its average.
+- *White noise ×2, spikes, polarity*: the three perturbations that discriminate the methods the most.
 
-Train on every artefact family except f, then score only on f (obj F1, mean over 3 levels, 1.9 M U-Net; 0.5 M gives the same picture). Full tables and analysis: [§ 3.3](#33-the-honest-test-leave-one-family-out) and [`results/lofo/lofo.md`](results/lofo/lofo.md).
-
-| held-out family f | none (no artefact seen) | **without f (f unknown)** | all (f seen, ceiling) |
-|---|---|---|---|
-| white | 0.915 | **0.935** | 0.945 |
-| pink | 0.958 | **0.956** | 0.956 |
-| drift | 0.976 | **0.976** | 0.974 |
-| jumps | 0.953 | **0.965** | 0.973 |
-| stripes | 0.976 | **0.976** | 0.974 |
-| lowpass | 0.960 | **0.964** | 0.976 |
-| saturate | 0.974 | **0.974** | 0.973 |
-| **spikes** | 0.705 | **0.777** | 0.972 |
-| **polarity** | 0.977 | **0.105** | 0.973 |
-
-Unseen families barely benefit from the others (transfer under +0.02). Two of them are catastrophic when unseen: polarity and spikes.
+**Reading.**
+- The U-Net LOFO gives up 0.004 obj F1 on clean data (0.975 against 0.979 for the plain U-Net) and leads on the aggregate robustness criteria (mean obj F1 0.907, 3 sets degraded out of 25). Randomizing artefacts raises the U-Net robustness score from 0.872 to 0.930 even though each family was unknown to its scorer.
+- Its overall score (0.930) stays just below logistic regression (0.935) only because of **polarity**: a family never seen in training is fatal (0.105). Without polarity it leads (0.964 against 0.959 and 0.936).
+- **Spikes** remain the other weak point (0.526 at 2 % of pixels). Logistic regression has the same weakness (0.533). Only a family seen in training fixes it (0.97).
+- The matched filter is robust because it is simple, but its absolute quality is low (mean obj F1 0.801).
+- Per-family LOFO numbers, transfer and gap: [§ 3.3](#33-the-honest-test-leave-one-family-out) and [`results/lofo/lofo.md`](results/lofo/lofo.md).
 
 ## Experimental setup
 
