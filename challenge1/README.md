@@ -6,7 +6,7 @@ This document follows the order in which we actually worked. Each choice of metr
 
 ## Results
 
-| | Matched filter | Logistic regression | U-Net (lowsnr) | U-Net LOFO |
+| | Matched filter | Logistic regression | U-Net | U-Net LOFO |
 |---|---|---|---|---|
 | **Detection quality** (official generator, test, 400 scenes) | | | | |
 | obj F1 (interdots found) | 0.863 | 0.924 | **0.979** | 0.975 |
@@ -25,7 +25,7 @@ This document follows the order in which we actually worked. Each choice of metr
 | worst of the 25 sets | 0.294 (polarity) | **0.533** (spikes 2 %) | 0.134 (spikes 2 %) | 0.105 (polarity) |
 | sets losing more than 10 % of clean obj F1 | 4 / 25 | 4 / 25 | 5 / 25 | **3 / 25** |
 
-**Columns.** *U-Net (lowsnr)* is the plain U-Net trained on clean simulator data with a log-uniform intensity law. *U-Net LOFO* is the final recipe: `PhysInput` preprocessing plus a generator that randomizes 8 artefact families, trained 9 times, each time with one family removed. Every perturbed set is scored by the model that **never saw its family**. Nothing is therefore tuned to the sets it is graded on.
+**Columns.** *U-Net* is the plain U-Net trained on clean simulator data (log-uniform intensity law, no artefacts). *U-Net LOFO* is the final recipe: `PhysInput` preprocessing plus a generator that randomizes 8 artefact families, trained 9 times, each time with one family removed. Every perturbed set is scored by the model that **never saw its family**. Nothing is therefore tuned to the sets it is graded on.
 
 **Robustness criteria.**
 - *Robustness score*: for each of the 25 perturbed sets (9 families × up to 3 severity levels), obj F1 on the perturbed images divided by obj F1 on the same images clean, averaged. It measures the relative loss and ignores absolute quality.

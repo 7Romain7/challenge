@@ -28,7 +28,7 @@ Three steps, each motivated by the limit of the previous one:
 
 ### Comparison of the four detectors
 
-| | Matched filter | Logistic regression | U-Net (lowsnr) | U-Net LOFO |
+| | Matched filter | Logistic regression | U-Net | U-Net LOFO |
 |---|---|---|---|---|
 | obj F1, test 400 scenes | 0.863 | 0.924 | **0.979** | 0.975 |
 | obj F1 on challenge 2 frames | 0.14 | 0.62 | **0.96** | not measured |
