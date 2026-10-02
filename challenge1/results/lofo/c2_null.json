@@ -1,0 +1,86 @@
+[
+ {
+  "name": "unet_lowsnr",
+  "thr": 0.55,
+  "c2_obj_f1": 0.9638705481741079,
+  "c2_tol_f1": 0.983375054600957,
+  "null_blobs_per_img": 0.78
+ },
+ {
+  "name": "lofo_u32_all",
+  "thr": 0.5,
+  "c2_obj_f1": 0.9505870438713825,
+  "c2_tol_f1": 0.9753892822298782,
+  "null_blobs_per_img": 1.1
+ },
+ {
+  "name": "lofo_u32_no-drift",
+  "thr": 0.35,
+  "c2_obj_f1": 0.9493597011611249,
+  "c2_tol_f1": 0.9747656203859774,
+  "null_blobs_per_img": 1.21
+ },
+ {
+  "name": "lofo_u32_no-jumps",
+  "thr": 0.1,
+  "c2_obj_f1": 0.9495024128432455,
+  "c2_tol_f1": 0.9748839261176465,
+  "null_blobs_per_img": 1.26
+ },
+ {
+  "name": "lofo_u32_no-lowpass",
+  "thr": 0.4,
+  "c2_obj_f1": 0.9471953224922347,
+  "c2_tol_f1": 0.9744642162416685,
+  "null_blobs_per_img": 1.13
+ },
+ {
+  "name": "lofo_u32_no-pink",
+  "thr": 0.2,
+  "c2_obj_f1": 0.9505152549778444,
+  "c2_tol_f1": 0.9740216805152125,
+  "null_blobs_per_img": 1.32
+ },
+ {
+  "name": "lofo_u32_no-polarity",
+  "thr": 0.2,
+  "c2_obj_f1": 0.9557050211408538,
+  "c2_tol_f1": 0.9783900079991481,
+  "null_blobs_per_img": 1.18
+ },
+ {
+  "name": "lofo_u32_no-saturate",
+  "thr": 0.15,
+  "c2_obj_f1": 0.9497739300042886,
+  "c2_tol_f1": 0.9766243803427588,
+  "null_blobs_per_img": 1.06
+ },
+ {
+  "name": "lofo_u32_no-spikes",
+  "thr": 0.8,
+  "c2_obj_f1": 0.9509238348266146,
+  "c2_tol_f1": 0.9762442544849405,
+  "null_blobs_per_img": 0.76
+ },
+ {
+  "name": "lofo_u32_no-stripes",
+  "thr": 0.3,
+  "c2_obj_f1": 0.9522668135047885,
+  "c2_tol_f1": 0.9775230940393503,
+  "null_blobs_per_img": 0.9
+ },
+ {
+  "name": "lofo_u32_no-white",
+  "thr": 0.7,
+  "c2_obj_f1": 0.9494319977885675,
+  "c2_tol_f1": 0.9743510198430216,
+  "null_blobs_per_img": 1.05
+ },
+ {
+  "name": "lofo_u32_none",
+  "thr": 0.02,
+  "c2_obj_f1": 0.9522064717063229,
+  "c2_tol_f1": 0.9758346269599173,
+  "null_blobs_per_img": 1.31
+ }
+]

@@ -31,11 +31,9 @@ Three steps, each motivated by the limit of the previous one:
 | | Matched filter | Logistic regression | U-Net | U-Net LOFO |
 |---|---|---|---|---|
 | obj F1, test 400 scenes | 0.863 | 0.924 | **0.979** | 0.975 |
-| obj F1 on challenge 2 frames | 0.14 | 0.62 | **0.96** | not measured |
-| robustness score (1 = insensitive) | 0.934 | 0.935 | 0.872 | 0.930 |
-| robustness score without polarity | 0.959 | 0.936 | 0.892 | **0.964** |
-| mean obj F1 over 25 perturbed sets | 0.801 | 0.861 | 0.855 | **0.907** |
-| worst of the 25 sets | 0.294 | **0.533** | 0.134 | 0.105 |
+| obj F1 on challenge 2 frames | 0.14 | 0.62 | **0.96** | 0.95 |
+| false alarms per empty scene | **0** | 0.28 | 0.78 | 1.10 |
+| robustness score, 25 perturbed sets (without polarity) | 0.934 (0.959) | **0.935** (0.936) | 0.872 (0.892) | 0.930 (**0.964**) |
 
 *U-Net LOFO*: `PhysInput` preprocessing plus 8 randomized artefact families, trained 9 times with one family removed. Each perturbed set is scored by the model that never saw its family. Criteria definitions, per-family results and analysis: [challenge1/README.md](challenge1/README.md) and [challenge1/results/lofo/lofo.md](challenge1/results/lofo/lofo.md).
 
